@@ -26,5 +26,6 @@ namespace TC_HengJiuGame.Models
         }
     
         public virtual DbSet<T_Users> T_Users { get; set; }
+        public virtual DbSet<Job> Job { get; set; }
     }
 }

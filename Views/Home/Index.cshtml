@@ -4,7 +4,7 @@
 }
 
 @using TC_HengJiuGame.Models;
-@{ 
+@{
     T_Users t_Users = new T_Users();
     if (ViewBag.UserModel != null)
     {
@@ -13,146 +13,148 @@
 }
 
 
-    <div class="layui-layout layui-layout-admin">
-        <div class="layui-header">
-            <div class="layui-logo layui-hide-xs layui-bg-black">恒久游戏管理系统</div>
-            <!-- 头部区域（可配合layui 已有的水平导航） -->
+<style>
+    .layui-body {
+        position: absolute;
+        top: 60px; /* 头部高度 */
+        bottom: 40px; /* 底部高度 */
+        left: 200px; /* 侧边栏宽度 */
+        right: 0;
+    }
 
-            <ul class="layui-nav layui-layout-right">
-                <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
-                    <a href="javascript:;">
-                        <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img">
-                        @t_Users.UserName
-                    </a>
+        .layui-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+</style>
+
+
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo layui-hide-xs layui-bg-black">恒久游戏管理系统</div>
+        <!-- 头部区域（可配合layui 已有的水平导航） -->
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
+                <a href="javascript:;">
+                    <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img">
+                    @t_Users.UserName
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" onclick="editUser()">个人资料修改</a></dd>
+                    <dd><a href="javascript:;" onclick="editPassWord()">修改密码</a></dd>
+                    <dd><a href="javascript:;" onclick="logOut()">退出系统</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">基本信息管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" onclick="editUser()">个人资料修改</a></dd>
-                        <dd><a href="javascript:;" onclick="editPassWord()">修改密码</a></dd>
-                        <dd><a href="javascript:;" onclick="logOut()">退出系统</a></dd>
+                        <dd><a href="/JobManage/Index">职位管理</a></dd>
+                        <dd><a href="javascript:;">组织机构管理</a></dd>
+                        <dd><a href="javascript:;">用户管理</a></dd>
                     </dl>
                 </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">权限管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">员工角色管理</a></dd>
+                        <dd><a href="javascript:;">角色菜单管理</a></dd>
+                        <dd><a href="javascript:;">菜单管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">游戏管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">游戏大类管理</a></dd>
+                        <dd><a href="javascript:;">游戏角色管理</a></dd>
+                        <dd><a href="javascript:;">游戏皮肤管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="javascript:;">...</a></li>
+                <li class="layui-nav-item"><a href="javascript:;">...</a></li>
             </ul>
         </div>
-        <div class="layui-side layui-bg-black">
-            <div class="layui-side-scroll">
-                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-                <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                    <li class="layui-nav-item layui-nav-itemed">
-                        <a class="" href="javascript:;">基本信息管理</a>
-                        <dl class="layui-nav-child">
-                            <dd><a href="javascript:;">职位管理</a></dd>
-                            <dd><a href="javascript:;">组织机构管理</a></dd>
-                            <dd><a href="javascript:;">用户管理</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item">
-                        <a href="javascript:;">权限管理</a>
-                        <dl class="layui-nav-child">
-                            <dd><a href="javascript:;">员工角色管理</a></dd>
-                            <dd><a href="javascript:;">角色菜单管理</a></dd>
-                            <dd><a href="javascript:;">菜单管理</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item">
-                        <a href="javascript:;">游戏管理</a>
-                        <dl class="layui-nav-child">
-                            <dd><a href="javascript:;">游戏大类管理</a></dd>
-                            <dd><a href="javascript:;">游戏角色管理</a></dd>
-                            <dd><a href="javascript:;">游戏皮肤管理</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item"><a href="javascript:;">...</a></li>
-                    <li class="layui-nav-item"><a href="javascript:;">...</a></li>
-                </ul>
-            </div>
-        </div>
     </div>
-        <div class="layui-body">
-            <!-- 内容主体区域 -->
-            <!--<div style="padding: 15px;">
-                <blockquote class="layui-elem-quote layui-text">
-                    Layui 框体布局内容主体区域
-                </blockquote>
-                <div class="layui-card layui-panel">
-                    <div class="layui-card-header">
-                        下面是充数内容，为的是出现滚动条
-                    </div>
-                    <div class="layui-card-body">
-                        充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>你还真滑到了底部呀
-                    </div>
-                </div>
-                <br><br>
-            </div>
-        </div>
-        <div class="layui-footer">-->
-            <!-- 底部固定区域 -->
-            <!--底部固定区域
-        </div>-->
-        </div>
-
-
-        
-        <script>
-            //JS
-            layui.use(['element', 'layer', 'util'], function () {
-                var element = layui.element;
-                var layer = layui.layer;
-                var util = layui.util;
-                var $ = layui.$;
-
-                //头部事件
-                util.event('lay-header-event', {
-                    menuLeft: function (othis) { // 左侧菜单事件
-                        layer.msg('展开左侧菜单的操作', { icon: 0 });
-                    },
-                });
-            });
+</div>
+<div class="layui-body">
+    <iframe id="Demo" src="/JobManage/Index" @*style="width:99%;height:99%;"*@></iframe>
+</div>
+<div class="layui-footer">
+    底部固定区域
+    底部固定区域
+</div>
 
 
 
-            //显示修改页面
-            function editUser() {
-                // 在此处输入 layer 的任意代码
-                layer.open({
-                    title: '修改个人资料',
-                    type: 2, // page 层类型
-                    area: ['680px', '450px'],
-                    shade: 0.8, // 遮罩透明度
-                    shadeClose: false, // 点击遮罩区域，关闭弹层
-                    maxmin: true, // 允许全屏最小化
-                    anim: 0, // 0-6 的动画形式，-1 不开启
-                    content: '/Home/Edit'
-                });
+<script>
+    //JS
+    layui.use(['element', 'layer', 'util'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+        var util = layui.util;
+        var $ = layui.$;
+
+        //头部事件
+        util.event('lay-header-event', {
+            menuLeft: function (othis) { // 左侧菜单事件
+                layer.msg('展开左侧菜单的操作', { icon: 0 });
+            },
+        });
+    });
+
+
+
+    //显示修改页面
+    function editUser() {
+        // 在此处输入 layer 的任意代码
+        layer.open({
+            title: '修改个人资料',
+            type: 2, // page 层类型
+            area: ['680px', '450px'],
+            shade: 0.8, // 遮罩透明度
+            shadeClose: false, // 点击遮罩区域，关闭弹层
+            maxmin: true, // 允许全屏最小化
+            anim: 0, // 0-6 的动画形式，-1 不开启
+            content: '/Home/Edit'
+        });
+    }
+    //显示修改密码页面
+    function editPassWord() {
+        // 在此处输入 layer 的任意代码
+        layer.open({
+            title: '修改密码',
+            type: 2, // page 层类型
+            area: ['360px', '380px'],
+            shade: 0.8, // 遮罩透明度
+            shadeClose: false, // 点击遮罩区域，关闭弹层
+            maxmin: true, // 允许全屏最小化
+            anim: 0, // 0-6 的动画形式，-1 不开启
+            content: '/Home/EditPassWord'
+        });
+    }
+
+    //点击退出事件,清除缓存
+    function logOut() {
+        $.ajax({
+            url: "/Home/Logout",
+            type: "post",
+            success: function (res) {
+                if (res.code == 0) {
+                    layer.msg(res.msg, { icon: 6, time: 1000 }, function () {
+                        window.top.location.replace("/Login/Index");
+                    });
+                } else {
+                    layer.msg(res.msg, { icon: 5, time: 2000 });
+                }
             }
-            //显示修改密码页面
-            function editPassWord() {
-                // 在此处输入 layer 的任意代码
-                layer.open({
-                    title: '修改密码',
-                    type: 2, // page 层类型
-                    area: ['360px', '380px'],
-                    shade: 0.8, // 遮罩透明度
-                    shadeClose: false, // 点击遮罩区域，关闭弹层
-                    maxmin: true, // 允许全屏最小化
-                    anim: 0, // 0-6 的动画形式，-1 不开启
-                    content: '/Home/EditPassWord'
-                });
-            }
-
-            //点击退出事件,清除缓存
-            function logOut() {
-                $.ajax({
-                    url: "/Home/Logout",
-                    type: "post",
-                    success: function (res) {
-                        if (res.code == 0) {
-                            layer.msg(res.msg, { icon: 6, time: 1000 }, function () {
-                                window.top.location.replace("/Login/Index");
-                            });
-                        } else {
-                            layer.msg(res.msg, { icon: 5, time: 2000 });
-                        }
-                    }
-                });
-            }
-        </script>
+        });
+    }
+</script>
 
