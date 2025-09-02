@@ -56,7 +56,7 @@
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">基本信息管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/JobManage/Index">职位管理</a></dd>
+                        <dd><a onclick="toUrl('JobManage')">职位管理</a></dd>
                         <dd><a href="javascript:;">组织机构管理</a></dd>
                         <dd><a href="javascript:;">用户管理</a></dd>
                     </dl>
@@ -94,6 +94,10 @@
 
 
 <script>
+    function toUrl(job) {
+        $("#Demo").attr("src", "/" + job+"/Index")
+    }
+
     //JS
     layui.use(['element', 'layer', 'util'], function () {
         var element = layui.element;
