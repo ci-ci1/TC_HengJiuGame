@@ -7,8 +7,9 @@
       <Diagram DiagramId="418f8e554fcc470289f115b86ee4356d" Name="Diagram1">
         <EntityTypeShape EntityType="HengJiuGameModel.Job" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HengJiuGameModel.Users" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="HengJiuGameModel.GameRole" Width="1.5" PointX="5.375" PointY="0.75" />
-        <EntityTypeShape EntityType="HengJiuGameModel.OrganizationStructure" Width="1.5" PointX="7.5" PointY="0.875" />
+        <EntityTypeShape EntityType="HengJiuGameModel.GameRole" Width="1.5" PointX="4.625" PointY="0.75" />
+        <EntityTypeShape EntityType="HengJiuGameModel.OrganizationStructure" Width="1.5" PointX="6.625" PointY="0.75" />
+        <EntityTypeShape EntityType="HengJiuGameModel.SystemResourceModule" Width="1.5" PointX="8.625" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

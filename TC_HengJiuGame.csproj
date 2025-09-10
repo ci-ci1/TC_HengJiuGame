@@ -197,6 +197,7 @@
     <Compile Include="Controllers\JobManageController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LoginFitterController.cs" />
+    <Compile Include="Controllers\MenuManageController.cs" />
     <Compile Include="Controllers\OrgManageController.cs" />
     <Compile Include="Controllers\UserManageController.cs" />
     <Compile Include="Controllers\Utilities\ExportToExcel.cs" />
@@ -228,6 +229,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ReturnJsonData.cs" />
+    <Compile Include="Models\SystemResourceModule.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Users.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -303,6 +307,7 @@
     <Content Include="Views\GameRoleManage\Index.cshtml" />
     <Content Include="Views\UserManage\UploadInfo.cshtml" />
     <Content Include="Views\OrgManage\Index.cshtml" />
+    <Content Include="Views\MenuManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -7,41 +7,43 @@ using TC_HengJiuGame.Models;
 
 namespace TC_HengJiuGame.Controllers
 {
-    public class OrgManageController : Controller
+    public class MenuManageController : Controller
     {
         HengJiuGameEntities db = new HengJiuGameEntities();
         ReturnJsonListData treeListDate = new ReturnJsonListData();
         ReturnJsonData jsonData = new ReturnJsonData();
-
-
-        // GET: OrgManage
         public ActionResult Index()
         {
             return View();
         }
-        //查询
-        public ActionResult GetList(int page, int limit, string name, string code)
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public ActionResult GetList(int page, int limit, string name)
         {
             var newTreelist = new List<TreeListDate>();
-
-            var list = db.OrganizationStructure.Where(a => a.ParentID == Guid.Empty).ToList();
+            var list = db.SystemResourceModule.Where(a => a.ParentID == Guid.Empty).ToList();
             foreach (var item in list)
             {
                 TreeListDate treeDate = new TreeListDate();
 
                 treeDate.id = item.ID;
-                treeDate.name = item.OrgName;
-                treeDate.code = item.OrgCode;
-                treeDate.leve = item.Leve;
+                treeDate.name = item.ModuleName;
+                treeDate.code = item.ModuleCode;
+                treeDate.type = item.Type;
+                treeDate.url = item.Url;
                 treeDate.parentId = item.ParentID;
-                treeDate.IsParent = db.OrganizationStructure.Where(a => a.ParentID == item.ID).ToList().Count > 0 ? true : false;
+                treeDate.IsParent = db.SystemResourceModule.Where(a => a.ParentID == item.ID).ToList().Count > 0 ? true : false;
                 treeDate.children = BindTree(list, item.ID);//递归调用
                 newTreelist.Add(treeDate);
             }
             treeListDate.code = 0;
             treeListDate.count = newTreelist.Count;
             treeListDate.data = newTreelist;
-
 
             return Json(treeListDate, JsonRequestBehavior.AllowGet);
         }
@@ -51,21 +53,21 @@ namespace TC_HengJiuGame.Controllers
         /// <param name="list"></param>
         /// <param name="ID"></param>
         /// <returns></returns>
-        public List<object> BindTree(List<OrganizationStructure> list,Guid ID)
+        public List<object> BindTree(List<SystemResourceModule> list, Guid ID)
         {
             List<object> treeList = new List<object>();
 
-            var childList = db.OrganizationStructure.Where(a => a.ParentID == ID).ToList();
+            var childList = db.SystemResourceModule.Where(a => a.ParentID == ID).ToList();
             foreach (var item in childList)
             {
                 TreeListDate treeDate = new TreeListDate();
-
                 treeDate.id = item.ID;
-                treeDate.name = item.OrgName;
-                treeDate.code = item.OrgCode;
-                treeDate.leve = item.Leve;
+                treeDate.name = item.ModuleName;
+                treeDate.code = item.ModuleCode;
+                treeDate.type = item.Type;
+                treeDate.url = item.Url;
                 treeDate.parentId = item.ParentID;
-                treeDate.IsParent = db.OrganizationStructure.Where(a => a.ParentID == item.ID).ToList().Count > 0 ? true : false;
+                treeDate.IsParent = db.SystemResourceModule.Where(a => a.ParentID == item.ID).ToList().Count > 0 ? true : false;
                 treeDate.children = BindTree(childList, item.ID);//递归调用
                 treeList.Add(treeDate);
             }
@@ -79,25 +81,29 @@ namespace TC_HengJiuGame.Controllers
             public Guid id { get; set; }
             public string name { get; set; }
             public string code { get; set; }
-            public int? leve { get; set; }
+            public int? type { get; set; }
+            public string url { get; set; }
             public Guid? parentId { get; set; }
             public IEnumerable<object> children { get; set; }
             public bool IsParent { get; set; }
         }
-        [HttpPost]
         /// <summary>
-        /// 添加父节点
+        /// 添加主菜单
         /// </summary>
-        /// <param name="org">实体模型</param>
+        /// <param name="name"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        public ActionResult AddPar(OrganizationStructure org)
+        public ActionResult AddPar(string ModuleCode, string ModuleName)
         {
-            org.ID = Guid.NewGuid();
-            org.Leve = 0;
-            org.ParentID = Guid.Empty;
-            org.CreateDate = DateTime.Now;
-            org.ModifyDate = DateTime.Now;
-            db.OrganizationStructure.Add(org);
+            SystemResourceModule model = new SystemResourceModule();
+            model.ID = Guid.NewGuid();
+            model.ModuleCode = ModuleCode;
+            model.ModuleName = ModuleName;
+            model.Type = 0;
+            model.ParentID = Guid.Empty;
+            model.CreateDate = DateTime.Now;
+            model.ModifyDate = DateTime.Now;
+            db.SystemResourceModule.Add(model);
             if (db.SaveChanges() > 0)
             {
                 jsonData.code = 0;
@@ -108,23 +114,20 @@ namespace TC_HengJiuGame.Controllers
                 jsonData.code = 1;
                 jsonData.msg = "提交失败！";
             }
-
-
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
-        //添加子节点
-        [HttpPost]
-        public ActionResult Save(OrganizationStructure org)
+        /// <summary>
+        /// 添加子菜单
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ActionResult Save(SystemResourceModule model)
         {
-                org.ParentID = org.ID;
-                org.ID = Guid.NewGuid();
-                org.ModifyDate = DateTime.Now;
-                org.CreateDate = DateTime.Now;
-
-            db.OrganizationStructure.Add(org);
-
-            
+            model.ParentID = model.ID;
+            model.ID = Guid.NewGuid();
+            model.ModifyDate = DateTime.Now;
+            model.CreateDate = DateTime.Now;
+            db.SystemResourceModule.Add(model);
             if (db.SaveChanges() > 0)
             {
                 jsonData.code = 0;
@@ -135,18 +138,21 @@ namespace TC_HengJiuGame.Controllers
                 jsonData.code = 1;
                 jsonData.msg = "提交失败！";
             }
-
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
-        //修改
-        public ActionResult Update(OrganizationStructure model)
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ActionResult Update(SystemResourceModule model)
         {
-            var entity = db.OrganizationStructure.Find(model.ID);
+            var entity = db.SystemResourceModule.Find(model.ID);
             if (entity != null)
             {
-                entity.OrgName = model.OrgName;
-                entity.OrgCode = model.OrgCode;
+                entity.ModuleName = model.ModuleName;
+                entity.ModuleCode = model.ModuleCode;
+                entity.Url = model.Url;
                 entity.ModifyDate = DateTime.Now;
 
                 db.Entry(entity).State = System.Data.Entity.EntityState.Modified;
@@ -169,18 +175,22 @@ namespace TC_HengJiuGame.Controllers
             }
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
+        /// <summary>
+        /// 编辑子节点对父节点赋值
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public ActionResult GetInfo(Guid? ID)
         {
-            if (ID==Guid.Empty||ID==null)
+            if (ID == Guid.Empty || ID == null)
             {
                 jsonData.code = 1;
                 jsonData.msg = "未接收到参数，请联系管理员！";
             }
             else
             {
-                var entity = db.OrganizationStructure.Find(ID);
-                if (entity!=null)
+                var entity = db.SystemResourceModule.Find(ID);
+                if (entity != null)
                 {
                     jsonData.data = entity;
                 }
@@ -193,15 +203,18 @@ namespace TC_HengJiuGame.Controllers
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
-        //删除
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public ActionResult Delete(Guid ID)
         {
-            var model = db.OrganizationStructure.Find(ID);
+            var model = db.SystemResourceModule.Find(ID);
 
             if (model != null)
             {
-                db.OrganizationStructure.Remove(model);
+                db.SystemResourceModule.Remove(model);
                 if (db.SaveChanges() > 0)
                 {
                     jsonData.code = 0;
@@ -222,7 +235,6 @@ namespace TC_HengJiuGame.Controllers
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
-
+    
     }
 }

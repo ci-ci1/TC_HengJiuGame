@@ -42,6 +42,19 @@
           <Property Name="ModifyDate" Type="datetime" />
           <Property Name="IsParent" Type="bit" />
         </EntityType>
+        <EntityType Name="SystemResourceModule">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModuleCode" Type="varchar" MaxLength="200" />
+          <Property Name="ModuleName" Type="varchar" MaxLength="200" />
+          <Property Name="Url" Type="varchar" MaxLength="200" />
+          <Property Name="Type" Type="int" />
+          <Property Name="ParentID" Type="uniqueidentifier" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ModifyDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="ID" />
@@ -67,6 +80,7 @@
           <EntitySet Name="GameRole" EntityType="Self.GameRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Job" EntityType="Self.Job" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrganizationStructure" EntityType="Self.OrganizationStructure" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SystemResourceModule" EntityType="Self.SystemResourceModule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -110,6 +124,7 @@
           <EntitySet Name="Users" EntityType="Self.Users" />
           <EntitySet Name="GameRole" EntityType="HengJiuGameModel.GameRole" />
           <EntitySet Name="OrganizationStructure" EntityType="HengJiuGameModel.OrganizationStructure" />
+          <EntitySet Name="SystemResourceModule" EntityType="HengJiuGameModel.SystemResourceModule" />
         </EntityContainer>
         <EntityType Name="GameRole">
           <Key>
@@ -136,6 +151,19 @@
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="ModifyDate" Type="DateTime" Precision="3" />
           <Property Name="IsParent" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="SystemResourceModule">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="ModuleCode" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ModuleName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Url" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="Int32" />
+          <Property Name="ParentID" Type="Guid" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -201,6 +229,20 @@
                 <ScalarProperty Name="Leve" ColumnName="Leve" />
                 <ScalarProperty Name="OrgCode" ColumnName="OrgCode" />
                 <ScalarProperty Name="OrgName" ColumnName="OrgName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SystemResourceModule">
+            <EntityTypeMapping TypeName="HengJiuGameModel.SystemResourceModule">
+              <MappingFragment StoreEntitySet="SystemResourceModule">
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="ModuleName" ColumnName="ModuleName" />
+                <ScalarProperty Name="ModuleCode" ColumnName="ModuleCode" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
