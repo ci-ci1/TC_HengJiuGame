@@ -11,7 +11,7 @@ namespace TC_HengJiuGame.Controllers
     [LoginFitterController]
     public class HomeController : Controller
     {
-        TC_HengJiuGame_DBEntities db = new TC_HengJiuGame_DBEntities();
+        HengJiuGameEntities db = new HengJiuGameEntities();
 
         //返回实例
         ReturnJsonData returnJsonData = new ReturnJsonData();
@@ -20,7 +20,7 @@ namespace TC_HengJiuGame.Controllers
         //首页视图
         public ActionResult Index()
         {
-            if (Session["T_Users"] == null)
+            if (Session["Users"] == null)
             {
                 return RedirectToAction("Index", "Login");
             }
@@ -53,7 +53,7 @@ namespace TC_HengJiuGame.Controllers
 
 
         //修改功能实现
-        public ActionResult Revise(T_Users t_Users)
+        public ActionResult Revise(Users t_Users)
         {
             if (t_Users.ID==Guid.Empty)
             {
@@ -62,7 +62,7 @@ namespace TC_HengJiuGame.Controllers
             }
             else
             {
-                var user = db.T_Users.Find(t_Users.ID);
+                var user = db.Users.Find(t_Users.ID);
                 if (user!=null)
                 {
                     user.CreateDate = DateTime.Now;
@@ -81,7 +81,7 @@ namespace TC_HengJiuGame.Controllers
                     {
                         returnJsonData.code = 0;
                         //更新缓存
-                        Session["T_Users"] = user;
+                        Session["Users"] = user;
                         returnJsonData.msg = "修改成功！";
                     }
                     else
@@ -104,10 +104,10 @@ namespace TC_HengJiuGame.Controllers
         //退出登录
         public ActionResult Logout()
         {
-            var sessionInfo = System.Web.HttpContext.Current.Session["T_Users"];
+            var sessionInfo = System.Web.HttpContext.Current.Session["Users"];
             if (sessionInfo!=null)
             {
-                Session.Remove("T_Users");
+                Session.Remove("Users");
                 Session.Clear();      // 清除所有Session
                 Session.Abandon();
                 returnJsonData.code = 0;
@@ -124,10 +124,10 @@ namespace TC_HengJiuGame.Controllers
 
 
         //修改密码功能
-        public ActionResult ChangePassWord(T_Users t_Users,string oldPassWord,string newPassWord)
+        public ActionResult ChangePassWord(Users t_Users,string oldPassWord,string newPassWord)
         {
-            var user = db.T_Users.Find(t_Users.ID);
-            if (oldPassWord==user.PassWord)
+            var user = db.Users.Find(t_Users.ID);
+            if (oldPassWord==user.Password)
             {
                 if (oldPassWord== newPassWord)
                 {
@@ -136,14 +136,14 @@ namespace TC_HengJiuGame.Controllers
                 }
                 else
                 {
-                    user.PassWord = newPassWord;
+                    user.Password = newPassWord;
                     db.Entry(user).State = System.Data.Entity.EntityState.Modified;
 
                     if (db.SaveChanges() > 0)
                     {
                         returnJsonData.code = 0;
                         //更新缓存
-                        Session["T_Users"] = user;
+                        Session["Users"] = user;
                         returnJsonData.msg = "修改成功！";
                     }
                     else

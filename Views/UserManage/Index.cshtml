@@ -1,0 +1,617 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<style>
+    .addHide {
+        display: none;
+    }
+    form {
+        margin-top: 20px;
+        text-align:center;
+    }
+</style>
+
+
+<div>
+    <fieldset class="layui-elem-field">
+        <legend>
+            <span class="layui-breadcrumb">
+                <a href="/Home/Index" target="_top">基础信息管理</a>
+                <a><cite>用户管理</cite></a>
+            </span>
+        </legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item" style=" margin-top: 10px">
+                @*<div class="layui-inline">
+                        <label class="layui-form-label">员工账号</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="code" name="code" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>*@
+                <div class="layui-inline">
+                    <label class="layui-form-label">员工姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="name" name="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">创建日期</label>
+                    <div class="layui-inline" id="ID-laydate-rangeLinked">
+                        <div class="layui-input-inline">
+                            <input type="text" name="StartTime" autocomplete="off" id="ID-laydate-start-date-1" class="layui-input" placeholder="开始日期">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline">
+                            <input type="text" name="EndTime" autocomplete="off" id="ID-laydate-end-date-1" class="layui-input" placeholder="结束日期">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" onclick="Add()" class="layui-btn layui-bg-blue"><i class="layui-icon layui-icon-add-1 "></i> 添加</button>
+                    <button type="button" onclick="Search()" class="layui-btn"><i class="layui-icon layui-icon-search"></i> 查询</button>
+                    <button type="button" onclick="DeleteAll()" class="layui-btn layui-btn-danger layui-btn-radius"><i class="layui-icon layui-icon-delete"></i>批量删除</button>
+                    <button type="button" class="layui-btn layui-btn-danger layui-btn-radius"><i class="layui-icon layui-icon-export"></i>导出</button>
+                    @*<button type="button" class="layui-btn demo-class-accept" lay-options="{accept: 'file'}"><i class="layui-icon layui-icon-upload"></i>上传文件</button>*@
+                    <button type="button" onclick="upload()" class="layui-btn layui-bg-blue"><i class="layui-icon layui-icon-upload"></i> 上传文件</button>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+</div>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+
+@*添加和修改页面*@
+<div class="addHide">
+
+
+    <form class="layui-form" lay-filter="demo-val-filter">
+        <input type="hidden" name="ID">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户账号</label>
+                <div class="layui-input-inline layui-input-wrap">
+                    <input type="text" name="UserCode" lay-verify="required" autocomplete="off" lay-affix="clear" class="layui-input" >
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">用户名称</label>
+                <div class="layui-input-inline layui-input-wrap">
+                    <input type="text" name="UserName" lay-verify="required" autocomplete="off" lay-affix="clear" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户性别</label>
+                <div class="layui-input-inline layui-input-wrap">
+                    <input type="radio" name="Sex" value="true" title="男">
+                    <input type="radio" name="Sex" value="false" title="女">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">出生日期</label>
+                <div class="layui-input-inline layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <input type="text" name="BirthDay" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户籍贯</label>
+                <div class="layui-input-inline layui-input-wrap">
+                    <input type="text" name="NativePlace" lay-verify="required" autocomplete="off" lay-affix="clear" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">家庭住址</label>
+                <div class="layui-input-inline layui-input-wrap">
+                    <input type="text" name="Address" lay-verify="required" autocomplete="off" lay-affix="clear" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="Email" lay-verify="email" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">手机电话</label>
+                <div class="layui-input-inline layui-input-wrap">
+                    <input type="text" name="Tel" lay-verify="required" autocomplete="off" lay-affix="clear" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="text-align: center;">
+            <button type="submit" class="layui-btn" lay-submit lay-filter="demo1">立即提交</button>
+            <button type="button" class="layui-btn-warm layui-btn" onclick="ClosePage()" style="margin-left:50px;">取消</button>
+        </div>
+    </form>
+
+</div>
+
+
+
+
+
+
+
+
+<script>
+    var table;
+    var form;
+    layui.use(['table', 'util','form', 'upload','laydate'], function () {
+        table = layui.table;
+        var util = layui.util;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        form = layui.form;
+
+
+        // 上传文件
+        upload.render({
+            elem: '.demo-class-accept', // 绑定多个元素
+            url: '', // 此处配置你自己的上传接口即可
+            accept: 'file', // 普通文件
+            done: function (res) {
+                layer.msg('上传成功');
+                console.log(res);
+            }
+        });
+
+
+        // 绑定导出按钮点击事件
+        $("button:contains('导出')").click(function () {
+            // 显示"正在导出"提示框，居中显示
+            var loadingIndex = layer.load(1, {
+                shade: 0.3, // 遮罩透明度
+                content: '<div style="color: #fff;">正在导出，请稍候...</div>', // 提示内容
+                success: function (layero) {
+                    layero.find('.layui-layer-content').css({
+                        'padding-top': '30px',
+                        'textAlign': 'center'
+                    });
+                }
+            });
+
+            // 获取筛选条件并编码
+            var name = encodeURIComponent($("#name").val() || "");
+            var startTime = encodeURIComponent($("#ID-laydate-start-date-1").val() || "");
+            var endTime = encodeURIComponent($("#ID-laydate-end-date-1").val() || "");
+
+            // 获取选中的数据
+            var checkStatus = table.checkStatus('test');
+            var selectedData = checkStatus.data;
+
+            // 提取ID字段，生成一个包含ID字符串的数组
+            var selectedIds = selectedData.map(item => item.ID);
+
+            // 构造导出 URL
+            var url = '';
+            if (selectedIds.length > 0) {
+                // 如果有选中的数据，传递选中的数据进行导出
+                url = `/UserManage/ExportUserList?name=${name}&startTime=${startTime}&endTime=${endTime}&selectedData=${encodeURIComponent(JSON.stringify(selectedIds))}`;
+            } else {
+                // 如果没有选中的数据，按查询条件导出
+                url = `/UserManage/ExportUserList?name=${name}&startTime=${startTime}&endTime=${endTime}`;
+            }
+
+            // 2秒后隐藏提示框并执行导出
+            setTimeout(function () {
+                layer.close(loadingIndex); // 关闭提示框
+                window.location.href = url; // 执行导出
+            }, 2000); // 持续2秒
+        });
+
+
+
+        // 日期选择器绑定
+        laydate.render({
+            elem: '#date',
+            type: 'date',
+            format: 'yyyy-MM-dd'
+        });
+
+
+        table.render({
+            elem: '#test'
+            ,id: 'test'
+            , url: '/UserManage/GetUserList'
+            , title: '用户数据表'
+          //  , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+           @* , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                title: '提示'
+                , layEvent: 'LAYTABLE_TIPS'
+                , icon: 'layui-icon-tips'
+            }]*@
+            , cols: [[
+                { type: 'checkbox', fixed: 'left' }
+                , { field: 'UserCode', fixed: 'left', title: '员工账号', width: 120, align: 'center'}
+                , { field: 'UserName', title: '员工名称', width: 120, align: 'center'}
+                , {
+                    field: 'Sex',
+                    title: '性别',
+                    align: 'center',
+
+                    width: 80,
+                    templet: function (d) {
+                        return d.Sex ? "男" : "女";
+                    }
+                }
+
+                ,{
+                    field: 'BirthDay',
+                    title: '出生日期',
+                    align: 'center',
+                    width: 120,
+                    templet: function (d) {
+                        if (!d.BirthDay) return "";
+                        var ts = parseInt(d.BirthDay.replace(/\/Date\((\d+)\)\//, "$1"));
+                        return util.toDateString(ts, 'yyyy-MM-dd');
+                    }
+                }
+
+                , {
+                    field: 'Age',
+                    title: '年龄',
+                    align: 'center',
+                    width: 50,
+                    templet: function (d) {
+                        if (!d.BirthDay) return "";
+
+                        // 解析日期
+                        var ts = parseInt(d.BirthDay.replace(/\/Date\((\d+)\)\//, "$1"));
+                        //保存生日
+                        var birthDate = new Date(ts);
+                        //获取当前年份
+                        var now = new Date();
+
+                        // 计算年龄
+                        var age = now.getFullYear() - birthDate.getFullYear();
+                        return age;
+                    }
+                }
+
+
+                , {
+                    field: 'Status',
+                    title: '是否离职',
+                    align: 'center',
+                    width: 100,
+                    templet: function (d) {
+                        return d.Status ? "在职" : "离职";
+                    }
+                }
+                , {
+                    field: 'Email', title: '邮箱', width: 180, align: 'center',templet: function (res) {
+                        return '<em>' + res.Email + '</em>'
+                    }
+                }
+                , { field: 'Tel', width: 150, align: 'center', title: '电话' }
+                , {
+                    field: 'CreateDate',
+                    title: '创建时间',
+                    align: 'center',
+                    templet: function (d) {
+                        if (!d.CreateDate) return "";
+                        var ts = parseInt(d.CreateDate.replace(/\/Date\((\d+)\)\//, "$1"));
+                        return util.toDateString(ts, 'yyyy-MM-dd HH:mm:ss');
+                    }
+                }
+                , { field: 'Address', align: 'center', title: '员工住址' }
+                , {
+                    width: 150,
+                    fixed: 'right',
+                    title: '操作',
+                    align: 'center',
+                    toolbar: '#barDemo',  // 引用上面的模板
+                }
+            ]]
+
+            , page: true
+        });
+
+
+
+        // 日期范围 - 左右面板联动选择模式
+        laydate.render({
+            elem: '#ID-laydate-rangeLinked',
+            range: ['#ID-laydate-start-date-1', '#ID-laydate-end-date-1'],
+            rangeLinked: true // 开启日期范围选择时的区间联动标注模式 ---  2.8+ 新增
+        });
+
+
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    break;
+
+                //自定义头工具栏右侧图标 - 提示
+                case 'LAYTABLE_TIPS':
+                    layer.alert('这是工具栏右侧自定义的一个图标按钮');
+                    break;
+            };
+        });
+
+
+        // 渲染上传
+        upload.render({
+            elem: '.demo-class-accept', // 绑定多个元素
+            url: '', // 此处配置你自己的上传接口即可
+            accept: 'file', // 普通文件
+            done: function (res) {
+                layer.msg('上传成功');
+                console.log(res);
+            }
+        });
+
+
+        //监听行工具事件
+        //编辑，删除
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        url: "/UserManage/Delete",
+                        type: "post",
+                        data: { ID: data.ID },
+                        success: function (res) {
+
+                            if (res.code == 0) {
+                                layer.msg(res.msg, { icon: 6, time: 1200 });
+                                //关闭弹层
+                                layer.closeAll(); // 关闭所有类型的层
+                                //重载
+                                Search();
+
+                            } else {
+                                layer.msg(res.msg, { icon: 5, time: 2000 });
+                            }
+                        }
+                    })
+                });
+            } else if (obj.event === 'edit') {
+                // 编辑
+                layer.open({
+                    type: 1, // 页面层
+                    area: ['480px', '550px'],
+                    title: '修改职位',
+                    shade: 0.6,
+                    shadeClose: false,
+                    maxmin: true,
+                    anim: 0,
+                    content: $(".addHide"),
+                    cancel: function () {
+                        $(".addHide").hide(); // 关闭时隐藏表单
+                    }
+                });
+
+                // 表单赋值
+                //赋值
+                form.val('demo-val-filter', {
+                    "UserCode": data.UserCode,
+                    "UserName": data.UserName,
+                    "ID": data.ID,
+                    "Sex": data.Sex,
+                    // 调试输出，查看 data.BirthDay 的值
+                    "BirthDay": (function () {
+                        console.log("Received BirthDay: ", data.BirthDay); // 输出 BirthDay 的值进行调试
+
+                        // 判断是否为 /Date(时间戳)/ 格式
+                        if (data.BirthDay && data.BirthDay.startsWith("/Date(") && data.BirthDay.endsWith(")/")) {
+                            var timestamp = data.BirthDay.match(/\/Date\((\d+)\)\//);
+                            if (timestamp) {
+                                return "/Date(" + timestamp[1] + ")/"; // 提取时间戳并返回
+                            }
+                        }
+
+                        // 如果是有效的日期，返回 "/Date(时间戳)/" 格式
+                        if (isValidDate(data.BirthDay)) {
+                            return "/Date(" + new Date(data.BirthDay).getTime() + ")/";
+                        } else {
+                            console.log("Invalid BirthDay format."); // 输出无效日期的调试信息
+                            return "";  // 无效日期返回空字符串
+                        }
+                    })(),
+                    "NativePlace": data.NativePlace,
+                    "Address": data.Address,
+                    "Email": data.Email,
+                    "Tel": data.Tel
+                });
+
+                // 检查日期是否有效
+                function isValidDate(date) {
+                    // 使用正则检查日期格式，例如 "yyyy-MM-dd" 或者时间戳
+                    if (!date) return false;
+
+                    const parsedDate = new Date(date);
+                    return !isNaN(parsedDate.getTime()); // 返回是否为有效的日期
+                }
+
+            }
+        });
+
+
+
+        // 提交事件（添加功能）
+        form.on('submit(demo1)', function (data) {
+            var field = data.field; // 获取表单字段值
+            // 此处可执行 Ajax 等操作
+
+            $.ajax({
+                url: "/UserManage/Save",
+                type: "post",
+                data: field,
+                success: function (res) {
+                    if (res.code == 0) {
+                        layer.msg(res.msg, { icon: 6, time: 1000 }, function () {
+                            //关闭弹层
+                            layer.closeAll(); // 关闭所有类型的层
+                            //重载
+                            Search();
+
+                            $(".addHide").hide();
+                        });
+                    } else {
+                        layer.msg(res.msg, { icon: 5, time: 2000 });
+                    }
+                }
+            });
+
+            // …
+            return false; // 阻止默认 form 跳转
+        });
+
+    });
+
+
+
+
+
+    //查询
+    function Search() {
+        table.reload('test', {
+            where: { // 传递数据异步请求时携带的字段
+               @* code: $("#code").val(),*@
+                name: $("#name").val(),
+                startTime: $("#ID-laydate-start-date-1").val(),
+                endTime: $("#ID-laydate-end-date-1").val()
+            },
+            page: { curr: 1 } // ⭐ 查询后回到第一页
+        });
+    }
+
+    //批量删除
+    function DeleteAll() {
+
+        //获取选中行
+        var checkStatus = table.checkStatus('test')
+        var data = checkStatus.data; // 获取选中的数据
+
+        // 如果没有勾选任何数据
+        if (data.length === 0) {
+            // 弹出提示框，提醒用户勾选数据
+            layer.msg('请勾选要删除的用户', {
+                icon: 5, // 错误提示
+                time: 2000 // 提示持续时间：2秒
+            });
+            return; // 不继续执行删除操作
+        }
+
+
+        //获取选中行的id
+        var ids = [];
+        for (var i = 0; i < data.length; i++){
+            ids.push(data[i].ID);
+        }
+        //转成字符串
+        var idStr = ids.join(",");
+        console.log(idStr);
+        $.ajax({
+            url: "/UserManage/DeleteAll",
+            type: "post",
+            data: { ids: idStr },
+            success: function (res) {
+
+                if (res.code == 0) {
+                    layer.msg(res.msg, { icon: 6, time: 2000 });
+                    //关闭弹层
+                    layer.closeAll(); // 关闭所有类型的层
+                    //重载
+                    Search();
+
+                } else {
+                    layer.msg(res.msg, { icon: 5, time: 2000 });
+                }
+            }
+        })
+    }
+
+    //添加页面设置
+    function Add() {
+
+        console.log("添加按钮被点击");  // 检查是否有触发
+        //赋值
+        form.val('demo-val-filter', {
+            "UserCode": "",
+            "UserName": "",
+            "ID": "",
+            "Sex": "",
+            "BirthDay": "",
+            "NativePlace": "",
+            "Address": "",
+            "Email": "",
+            "Tel": ""
+        });
+
+        // 在此处输入 layer 的任意代码
+        layer.open({
+            type: 1, // page 层类型
+            area: ['480px', '550px'],
+            title: '新增职位',
+            shade: 0.6, // 遮罩透明度
+            shadeClose: false, // 点击遮罩区域，关闭弹层
+            maxmin: true, // 允许全屏最小化
+            anim: 0, // 0-6 的动画形式，-1 不开启
+            content: $(".addHide"),
+            cancel: function (index, layero, that) {
+                $(".addHide").hide();
+            }
+        });
+    }
+
+    // 直接关闭弹出层
+    function ClosePage() {
+        layer.closeAll(); // 关闭所有弹层
+        $(".addHide").hide();
+    }
+
+    //上传
+    function upload() {
+        // 在此处输入 layer 的任意代码
+        layer.open({
+            type: 2, // page 层类型
+            area: ['800px', '650px'],
+            title: '上传文件',
+            shade: 0.6, // 遮罩透明度
+            shadeClose: false, // 点击遮罩区域，关闭弹层
+            maxmin: true, // 允许全屏最小化
+            anim: 0, // 0-6 的动画形式，-1 不开启
+            content: '/UserManage/UploadInfo'
+        });
+    }
+
+
+</script>
+
+
+

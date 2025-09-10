@@ -12,13 +12,23 @@ namespace TC_HengJiuGame.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Job
+    public partial class Users
     {
         public System.Guid ID { get; set; }
-        public string JobName { get; set; }
-        public string JobCode { get; set; }
+        public string UserCode { get; set; }
+        public string UserName { get; set; }
+        public Nullable<bool> Sex { get; set; }
+        public Nullable<System.DateTime> BirthDay { get; set; }
+        public string NativePlace { get; set; }
+        public string Address { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public string Tel { get; set; }
+        public Nullable<bool> Status { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> ModifyDate { get; set; }
-        public Nullable<bool> IsDel { get; set; }
+        public Nullable<System.Guid> JobId { get; set; }
+        public Nullable<System.Guid> OrgID { get; set; }
+        public string QQ { get; set; }
     }
 }

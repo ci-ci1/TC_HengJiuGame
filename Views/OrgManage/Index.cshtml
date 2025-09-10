@@ -1,0 +1,454 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<style>
+    .layui-form-pane .layui-form-label {
+        width: 130px;
+    }
+
+    .layui-input {
+        width: 90%;
+    }
+
+    .addHidePar,.addHide {
+        display: none;
+    }
+    form{
+        margin-left:20px;
+        margin-top:20px;
+    }
+</style>
+
+<div>
+    <fieldset class="layui-elem-field">
+        <legend>
+            <span class="layui-breadcrumb">
+                <a href="/Home/Index" target="_top">基础信息管理</a>
+                <a><cite>组织机构管理</cite></a>
+            </span>
+        </legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item" style=" margin-top: 10px">
+                <div class="layui-inline">
+                    <label class="layui-form-label">机构名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="name" name="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">机构代码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="code" name="code" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="button" onclick="Add()" class="layui-btn layui-bg-blue"><i class="layui-icon layui-icon-add-1 "></i> 添加</button>
+                    <button type="button" onclick="Search()" class="layui-btn"><i class="layui-icon layui-icon-search"></i> 查询</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+
+
+<div class="addHide" style="text-align:center;">
+
+    <form class="layui-form layui-form-pane" lay-filter="demo-val-filter-edit">
+        <input type="hidden" name="ID" />
+        <input type="hidden" name="isEdit" /> <!-- 新增：标记是否为编辑操作 -->
+        <div class="layui-form-item">
+            <label class="layui-form-label">父级机构名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="ParOrgName" id="ParOrgName" autocomplete="off" placeholder="请输入父级机构名称" lay-verify="required" readonly disabled class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">父级机构代码</label>
+            <div class="layui-input-block">
+                <input type="text" name="ParOrgCode" id="ParOrgCode" autocomplete="off" placeholder="请输入父级机构代码" lay-verify="required" readonly disabled class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">当前级别</label>
+            <div class="layui-input-block">
+                <!-- 编辑时可编辑的级别选择框 -->
+                <select name="Leve" id="LeveSelect" lay-verify="required" readonly disabled class="layui-select">
+                    <option value="0">总部</option>
+                    <option value="1">分公司</option>
+                    <option value="2">部门</option>
+                    <option value="3">其他</option>
+                </select>
+                <!-- 隐藏字段用于提交（保持与后台的兼容性） -->
+                <input type="hidden" name="Leve" id="Leve" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">机构名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="OrgName" id="OrgName" autocomplete="off" placeholder="请输入组织机构名称" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">机构代码</label>
+            <div class="layui-input-block">
+                <input type="text" name="OrgCode" id="OrgCode" autocomplete="off" placeholder="请输入组织机构代码" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit lay-filter="demo2-edit">确认</button>
+            <button type="button" onclick="Reset()" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+
+</div>
+
+<div class="addHidePar" style="text-align:center;">
+    <form class="layui-form layui-form-pane" lay-filter="demo-val-filter-par">
+        <input type="hidden" name="id" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">父级机构名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="OrgName" id="OrgName" autocomplete="off" placeholder="请输入父级机构名称" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">父级机构代码</label>
+            <div class="layui-input-block">
+                <input type="text" name="OrgCode" id="OrgCode" autocomplete="off" placeholder="请输入父级机构代码" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit lay-filter="demo2-par">确认</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+
+
+
+<table class="layui-hide" id="ID-treeTable-demo"></table>
+
+<script type="text/html" id="TPL-treeTable-demo-tools">
+    <div class="layui-btn-container">
+        <a class="layui-btn layui-btn-xs" lay-event="addchildren">添加</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </div>
+</script>
+
+<script>
+
+
+    // 定义转换级别文本的函数
+    function getLevelText(level) {
+        switch (level) {
+            case 0:
+                return "总部";
+            case 1:
+                return "分公司";
+            case 2:
+                return "部门";
+            default:
+                return "其他";
+        }
+    }
+
+
+    var treeTable, form, layer;
+    layui.use(['treeTable', 'form', 'layer'], function () {
+        treeTable = layui.treeTable;  // 初始化树形表格
+        form = layui.form;            // 初始化表单
+        layer = layui.layer;
+
+
+
+        // 渲染表格（即使无数据，也会显示表头）
+        var inst = treeTable.render({
+            elem: '#ID-treeTable-demo',  // 绑定表格DOM
+            url: '/OrgManage/GetList',   // 接口可以返回空数据（但格式要正确）
+            cols: [[
+                { type: 'checkbox', fixed: 'left' },
+                { field: 'name', title: '机构名称'},  // 原“职位名称”改为“机构名称”更合理
+                { field: 'code', title: '机构代码', align: 'center'},
+                {
+                    field: 'leve', title: '级别',
+                    templet: function (d) {
+                        switch (d.leve) {
+                            case 0: return "总部";
+                            case 1: return "分公司";
+                            case 2: return "部门";
+                            default: return "其他";
+                        }
+                    }, align: 'center'
+                },
+                { title: '操作', toolbar: '#TPL-treeTable-demo-tools', width: 200, align: 'center' }
+            ]],
+            page: true,  // 显示分页（即使无数据，分页栏也会显示）
+
+        });
+
+
+
+
+        // 监听树形表格的行工具事件（编辑/删除）
+        treeTable.on('tool(ID-treeTable-demo)', function (obj) {  // 用 treeTable.on 而非 table.on
+
+            var data = obj.data;
+            
+            if (obj.event === 'del') {
+                //删除判断
+                if (data.IsParent == true) {
+                    layer.msg("当前行下有子集，请先删除子集", { icon: 5, time: 2000 });
+                    return false;
+                }
+
+                layer.confirm('确定删除？', function (index) {
+
+                    $.ajax({
+                        url: "/OrgManage/Delete",
+                        type: "post",
+                        data: { ID: data.id },
+                        success: function (res) {
+                            if (res.code == 0) {
+                                layer.msg(res.msg, { icon: 6, time: 200 });
+                                $(".addHide").hide();  // 隐藏弹层
+                                layer.closeAll();
+                                Search();  // 重新加载数据
+                            } else {
+                                layer.msg(res.msg, { icon: 5, time: 200 });
+                            }
+                        }
+                    })
+
+
+                });
+            }
+            //修改
+            else if (obj.event === 'edit') {
+
+                // 设置下拉框选中状态
+                document.getElementById('LeveSelect').value = data.leve;
+                // 同步到隐藏字段
+                document.getElementById('Leve').value = data.leve;
+
+                if (data.leve==0) {
+                    //赋值
+                    form.val('demo-val-filter-edit', {
+                        "ParOrgCode": data.code,
+                        "ParOrgName": data.name,
+                        "Leve": data.leve,
+                        "ID": data.id,
+                        "OrgName": data.name,
+                        "OrgCode": data.code,
+                        "isEdit": true // 标记为编辑
+                    });
+                } else {
+
+                    $.ajax({
+                        url: "/OrgManage/GetInfo",  // 提交到保存接口
+                        type: "post",
+                        data: { ID: data.parentId },
+                        success: function (res) {
+                            if (res.code == 0) {
+
+                                var entity = res.data;
+                                //赋值
+                                form.val('demo-val-filter-edit', {
+                                    "ParOrgCode": entity.OrgCode,
+                                    "ParOrgName": entity.OrgName,
+                                    "Leve": data.leve,
+                                    "ID": data.id,
+                                    "OrgName": data.name,
+                                    "OrgCode": data.code,
+                                    "isEdit": true // 标记为编辑
+                                });
+
+                            } else {
+                                layer.msg("(" + data.name+")机构数据有误，请联系管理员", { icon: 6, time: 1000 }, function () {
+                                    $(".addHide").hide();  // 隐藏弹层
+                                    layer.closeAll();
+                                    Search();  // 重新加载数据
+                                });
+                            }
+                        }
+                    })
+                }
+
+                // 在此处输入 layer 的任意代码
+                layer.open({
+                    type: 1, // page 层类型
+                    area: ['500px', '400px'],
+                    title: '新增机构',
+                    shade: 0.6, // 遮罩透明度
+                    shadeClose: false, // 点击遮罩区域，关闭弹层
+                    maxmin: true, // 允许全屏最小化
+                    anim: 0, // 0-6 的动画形式，-1 不开启
+                    content: $(".addHide"),
+                    success: function () {
+                        form.render('select'); // 重新渲染下拉框确保选中状态正确
+                    },
+                    cancel: function (index, layero, that) {
+                        $(".addHide").hide();
+                    }
+                });
+            }
+                //新增子节点
+            else if (obj.event === 'addchildren') {
+
+                // 新增：计算子节点的数字级别
+                var childLevel = parseInt(data.leve) + 1;
+
+                console.log(data);
+                // 设置级别值
+                document.getElementById('LeveSelect').value = childLevel;
+                document.getElementById('Leve').value = childLevel;
+
+
+                form.val('demo-val-filter-edit', {
+                    "ParOrgCode": data.code,
+                    "ParOrgName": data.name,
+                    "Leve": childLevel,
+                    "ID": data.id,
+                    "OrgName": "",
+                    "OrgCode": "", 
+                    "isEdit": false
+
+                });
+                console.log(data.id);
+
+                // 在此处输入 layer 的任意代码
+                layer.open({
+                    type: 1, // page 层类型
+                    area: ['500px', '400px'],
+                    title: '新增机构',
+                    shade: 0.6, // 遮罩透明度
+                    shadeClose: false, // 点击遮罩区域，关闭弹层
+                    maxmin: true, // 允许全屏最小化
+                    anim: 0, // 0-6 的动画形式，-1 不开启
+                    content: $(".addHide"),
+                    success: function () {
+                        form.render('select');
+                    },
+                    cancel: function () {
+                        $(".addHide").hide();
+                    }
+                });
+            }
+        });
+
+
+
+
+
+        // 提交事件（添加子节点/修改功能）
+        form.on('submit(demo2-edit)', function (data) {
+            var field = data.field;
+
+            var url = field.isEdit === 'true' ? "/OrgManage/Update" : "/OrgManage/Save";
+
+            $.ajax({
+                url: url,  // 提交到保存接口
+                type: "post",
+                data: field,
+                success: function (res) {
+                    console.log(field);  // 调试输出后端响应
+
+                    if (res.code == 0) {
+                        layer.msg(res.msg, { icon: 6, time: 1000 }, function () {
+                            $(".addHide").hide();  // 隐藏弹层
+                            layer.closeAll();
+                            Search();  // 重新加载数据
+                        });
+                    } else {
+                        layer.msg(res.msg, { icon: 5, time: 2000 });
+                    }
+                }
+            });
+            return false;  // 阻止表单的默认提交行为
+        });
+
+
+
+        // 提交事件（添加父节点功能）
+        form.on('submit(demo2-par)', function (data) {
+            var field = data.field;
+
+
+            $.ajax({
+                url: "/OrgManage/AddPar",
+                type: "post",
+                data: field,
+                success: function (res) {
+                    console.log(res);
+
+                    if (res.code == 0) {
+                        layer.msg(res.msg, { icon: 6, time: 1000 }, function () {
+                            $(".addHidePar").hide();
+                            layer.closeAll();
+                            Search();
+                        });
+                    } else {
+                        layer.msg(res.msg, { icon: 5, time: 2000 });
+                    }
+                }
+            });
+            return false;
+        });
+
+
+
+
+
+    });
+
+    //重置按钮
+    function Reset() {
+        document.getElementById('OrgName').value = '';       // 清空当前机构名称
+        document.getElementById('OrgCode').value = '';       // 清空当前机构代码
+    }
+
+
+    //查询
+    function Search() {
+        treeTable.reload('ID-treeTable-demo', {
+            where: { // 传递数据异步请求时携带的字段
+                name: $("#name").val(),
+                code: $("#code").val()
+            },
+            page: { curr: 1 } // ⭐ 查询后回到第一页
+        });
+    }
+
+    //添加页面设置
+    function Add() {
+        //赋值
+        form.val('demo-val-filter-par', {
+            "ParOrgCode": "",
+            "ParOrgName": "",
+            "ID": ""
+
+        });
+
+        // 在此处输入 layer 的任意代码
+        layer.open({
+            type: 1, // page 层类型
+            area: ['500px', '240px'],
+            title: '新增机构',
+            shade: 0.6, // 遮罩透明度
+            shadeClose: false, // 点击遮罩区域，关闭弹层
+            maxmin: true, // 允许全屏最小化
+            anim: 0, // 0-6 的动画形式，-1 不开启
+            content: $(".addHidePar"),
+            cancel: function (index, layero, that) {
+                $(".addHidePar").hide();
+            }
+        });
+    }
+</script>
+
+

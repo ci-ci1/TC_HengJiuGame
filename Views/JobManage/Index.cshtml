@@ -3,312 +3,11 @@
     ViewBag.Title = "Index";
 }
 
-@using TC_HengJiuGame.Models;
-@{
-    Job job = new Job();
-    if (ViewBag.UserModel != null)
-    {
-        job = ViewBag.UserModel;
-    }
-}
-
-@*<div>
-
-        <fieldset class="layui-elem-field">
-            <legend>
-                <span class="layui-breadcrumb">
-                    <a href="#">基础信息管理</a>
-                    <a><cite>职位管理</cite></a>
-                </span>
-            </legend>
-            <div class="layui-field-box">
-                <div class="layui-form-item" style=" margin-top: 10px">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">职位名称</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="name" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">职位代码</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="code" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <button type="button" class="layui-btn layui-btn-radius"><i class="layui-icon layui-icon-refresh-1"></i> 查询</button>
-                        <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i> 添加</button>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
-
-    </div>
-
-
-
-    <table class="layui-hide" id="jobtable" lay-filter="jobtable"></table>
-
-    <script type="text/html" id="barDemo">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script>
-
-    <script>
-        layui.use('table', function () {
-            var table = layui.table;
-
-            table.render({
-                elem: '#jobtable'
-                , url: '/JobManage/GetList'
-                , title: '用户数据表'
-                , cols: [[
-                    { type: 'checkbox', fixed: 'left' }
-                    , { type: 'numbers', fixed: 'left', title: '序号' }
-                    , { field: 'JobName', title: '职位名称' }
-                    , { field: 'JobCode', title: '职位代码' }
-                    , { field: 'CreateDate', title: '修改时间' }
-                    , { field: 'ModifyDate', title: '创建时间' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
-                ]]
-                , page: true
-            });
-
-
-
-
-
-
-            //监听行工具事件
-            table.on('tool(jobtable)', function (obj) {
-                var data = obj.data;
-                //console.log(obj)
-                if (obj.event === 'del') {
-                    layer.confirm('真的删除行么', function (index) {
-                        obj.del();
-                        layer.close(index);
-                    });
-                } else if (obj.event === 'edit') {
-                    layer.prompt({
-                        formType: 2
-                        , value: data.email
-                    }, function (value, index) {
-                        obj.update({
-                            email: value
-                        });
-                        layer.close(index);
-                    });
-                }
-            });
-        });
-    </script>
-*@
-
-
-
-
-
-
-
-
-
-
-
-@*
-
-    <style>
-        /* ⭐兜底：防止表头和表体滚动条宽度不同造成 1px 偏差 */
-        .layui-table-view .layui-table-header {
-            margin-right: 0 !important;
-        }
-    </style>
-
-    <div>
-        <input type="hidden" name="ID">
-        <fieldset class="layui-elem-field">
-            <legend>
-                <span class="layui-breadcrumb">
-                    <a href="#">基础信息管理</a>
-                    <a><cite>职位管理</cite></a>
-                </span>
-            </legend>
-            <div class="layui-field-box">
-                <div class="layui-form-item" style=" margin-top: 10px">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">职位名称</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="name" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">职位代码</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="code" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <button type="button" class="layui-btn layui-btn-radius">
-                            <i class="layui-icon layui-icon-refresh-1"></i> 查询
-                        </button>
-                        <button type="button" class="layui-btn layui-btn-warm">
-                            <i class="layui-icon layui-icon-add-1"></i> 添加
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-    </div>
-
-
-    <table class="layui-hide" id="jobtable" lay-filter="jobtable"></table>
-
-    <script type="text/html" id="barDemo">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script>
-
-    <script type="text/html" id="editFormTpl">
-        <form class="layui-form" lay-filter="editForm" style="padding:20px;">
-            <div class="layui-form-item">
-                <label class="layui-form-label">职位名称</label>
-                <div class="layui-input-block">
-                    <input type="text" name="JobName" required lay-verify="required"
-                           placeholder="请输入职位名称" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">职位代码</label>
-                <div class="layui-input-block">
-                    <input type="text" name="JobCode" required lay-verify="required"
-                           placeholder="请输入职位代码" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="saveBtn">保存</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                </div>
-            </div>
-        </form>
-    </script>
-
-    <script>
-    layui.use(['table', 'util', 'form'], function () {
-        var table = layui.table;
-        var util = layui.util;
-        var form = layui.form;
-
-        // 表格渲染
-        table.render({
-            elem: '#jobtable',
-            id: 'jobtable',
-            url: '/JobManage/GetList',
-            title: '职位数据表',
-            cols: [[
-                { type: 'numbers', title: '序号', width: 60, align: 'center' },
-                { field: 'JobName', title: '职位名称' },
-                { field: 'JobCode', title: '职位代码' },
-                {
-                    field: 'CreateDate',
-                    title: '创建时间',
-                    templet: function (d) {
-                        if (!d.CreateDate) return "";
-                        var ts = parseInt(d.CreateDate.replace(/\/Date\((\d+)\)\//, "$1"));
-                        return util.toDateString(ts, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    field: 'ModifyDate',
-                    title: '修改时间',
-                    templet: function (d) {
-                        if (!d.ModifyDate) return "";
-                        var ts = parseInt(d.ModifyDate.replace(/\/Date\((\d+)\)\//, "$1"));
-                        return util.toDateString(ts, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                { title: '操作', toolbar: '#barDemo', width: 150 }
-            ]],
-            page: true,
-            done: function () {
-                table.resize('jobtable');
-            }
-        });
-
-        // 监听行工具事件
-        table.on('tool(jobtable)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'del') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
-                });
-            } else if (obj.event === 'edit') {
-                // ⭐ 克隆表单模板（避免关闭后掉到页面下方）
-                var formHtml = document.getElementById("editFormTpl").innerHTML;
-
-                var index = layer.open({
-                    type: 1,
-                    area: ['500px', '300px'],
-                    title: '编辑职位信息',
-                    shade: 0.6,
-                    shadeClose: false,
-                    content: formHtml   // ⭐ 用模板内容，而不是页面上的 form
-                });
-
-                // ⭐ 弹窗渲染后赋值
-                setTimeout(function () {
-                    form.val("editForm", {
-                        "JobName": data.JobName,
-                        "JobCode": data.JobCode
-                    });
-                }, 50);
-            }
-        });
-
-        // 监听保存按钮（暂时只打印）
-        form.on('submit(saveBtn)', function (data) {
-            console.log("表单提交的数据：", data.field);
-            layer.msg("保存成功（演示）");
-            return false;
-        });
-
-
-
-        form.on('submit(saveBtn)', function (formData) {
-            $.ajax({
-                url: '/JobManage/Save',   // ⭐ 你后端的保存接口
-                type: 'POST',
-                data: formData.field,     // ⭐ Layui 自动收集的表单数据
-                success: function (res) {
-                    if (res.code === 0) {
-                        layer.msg('保存成功', { icon: 1 });
-                        layer.closeAll(); // 关闭弹层
-                        table.reload('jobtable'); // 刷新表格
-                    } else {
-                        layer.msg(res.msg || '保存失败', { icon: 2 });
-                    }
-                },
-                error: function () {
-                    layer.msg('请求出错，请稍后再试', { icon: 2 });
-                }
-            });
-            return false; // 阻止表单跳转
-        });
-
-
-    });
-    </script>
-*@
-
 
 
 <style>
-    /* ⭐兜底：防止表头和表体滚动条宽度不同造成 1px 偏差 */
-    .layui-table-view .layui-table-header {
-        margin-right: 0 !important;
+    .addHide {
+        display: none;
     }
 </style>
 
@@ -316,7 +15,7 @@
     <fieldset class="layui-elem-field">
         <legend>
             <span class="layui-breadcrumb">
-                <a href="#">基础信息管理</a>
+                <a href="/Home/Index" target="_top">基础信息管理</a>
                 <a><cite>职位管理</cite></a>
             </span>
         </legend>
@@ -325,28 +24,47 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">职位名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="name" autocomplete="off" class="layui-input">
+                        <input type="text" id="name" name="name" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">职位代码</label>
                     <div class="layui-input-block">
-                        <input type="text" name="code" autocomplete="off" class="layui-input">
+                        <input type="text" id="code" name="code" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <button type="button" class="layui-btn layui-btn-radius">
-                        <i class="layui-icon layui-icon-refresh-1"></i> 查询
-                    </button>
-                    <button type="button" class="layui-btn layui-btn-warm">
-                        <i class="layui-icon layui-icon-add-1"></i> 添加
-                    </button>
+                    <button type="button" onclick="Search()" class="layui-btn layui-btn-radius"><i class="layui-icon layui-icon-refresh-1"></i> 查询</button>
+                    <button type="button" onclick="Add()" class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i> 添加</button>
                 </div>
             </div>
         </div>
     </fieldset>
 </div>
 
+<div class="addHide">
+
+    <form class="layui-form layui-form-pane" lay-filter="demo-val-filter">
+        <input type="hidden" name="ID" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">职位名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="JobName" autocomplete="off" placeholder="请输入职位名称" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">职位代码</label>
+            <div class="layui-input-block">
+                <input type="text" name="JobCode" autocomplete="off" placeholder="请输入职位代码" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit lay-filter="demo2">确认</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+
+</div>
 
 <table class="layui-hide" id="jobtable" lay-filter="jobtable"></table>
 
@@ -355,176 +73,175 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
-<!-- ⭐ 表单模板 -->
-<script type="text/html" id="editFormTpl">
-    <form class="layui-form" lay-filter="editForm" style="padding:20px;">
-        <!-- ⭐ 隐藏字段，保存 ID -->
-        <input type="hidden" name="ID" value="@job.ID">
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">职位名称</label>
-            <div class="layui-input-block">
-                <input type="text" name="JobName" required lay-verify="required"
-                       placeholder="请输入职位名称" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">职位代码</label>
-            <div class="layui-input-block">
-                <input type="text" name="JobCode" required lay-verify="required"
-                       placeholder="请输入职位代码" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="saveBtn">保存</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-            </div>
-        </div>
-    </form>
-</script>
-
 <script>
-    layui.use(['table', 'util', 'form'], function () {
-        var table = layui.table;
-        var util = layui.util;
-        var form = layui.form;
-
-        // 表格渲染
-        table.render({
-            elem: '#jobtable',
-            id: 'jobtable',
-            url: '/JobManage/GetList',
-            title: '职位数据表',
-            cols: [[
-                { type: 'numbers', title: '序号', width: 60, align: 'center' },
-                { field: 'JobName', title: '职位名称' },
-                { field: 'JobCode', title: '职位代码' },
-                {
-                    field: 'CreateDate',
-                    title: '创建时间',
-                    templet: function (d) {
-                        if (!d.CreateDate) return "";
-                        var ts = parseInt(d.CreateDate.replace(/\/Date\((\d+)\)\//, "$1"));
-                        return util.toDateString(ts, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                {
-                    field: 'ModifyDate',
-                    title: '修改时间',
-                    templet: function (d) {
-                        if (!d.ModifyDate) return "";
-                        var ts = parseInt(d.ModifyDate.replace(/\/Date\((\d+)\)\//, "$1"));
-                        return util.toDateString(ts, 'yyyy-MM-dd HH:mm:ss');
-                    }
-                },
-                { title: '操作', toolbar: '#barDemo', width: 150 }
-            ]],
-            page: true,
-            done: function () {
-                table.resize('jobtable');
-            }
-        });
+        var table;
+        var form;
+        layui.use(['table', 'util','form'], function () {
+            table = layui.table;
+            var util = layui.util;
+            form = layui.form;
 
 
-        //添加
-        $(document).on('click', '.layui-btn-warm', function () {
-    // ⭐ 克隆表单模板
-    var formHtml = document.getElementById("editFormTpl").innerHTML;
-
-    var index = layer.open({
-        type: 1,
-        area: ['500px', '300px'],
-        title: '添加职位信息',
-        shade: 0.6,
-        shadeClose: false,
-        content: formHtml
-    });
-
-    // ⭐ 弹窗渲染后清空表单（确保不赋值）
-    setTimeout(function () {
-        form.val("editForm", {
-            "JobName": "",
-            "JobCode": "",
-            "ID": ""    // 隐藏字段，避免被误识别为修改
-        });
-    }, 50);
-});
+            
 
 
+            table.render({
+                elem: '#jobtable'
+                ,id: 'jobtable'
+                , url: '/JobManage/GetList'
+                , title: '用户数据表'
+                , cols: [[
+                    { type: 'numbers', title: '序号', width: 60, align: 'center' },
+                    { field: 'JobName', title: '职位名称' },
+                    { field: 'JobCode', title: '职位代码' },
+                    {
+                        field: 'CreateDate',
+                        title: '创建时间',
+                        templet: function (d) {
+                            if (!d.CreateDate) return "";
+                            var ts = parseInt(d.CreateDate.replace(/\/Date\((\d+)\)\//, "$1"));
+                            return util.toDateString(ts, 'yyyy-MM-dd HH:mm:ss');
+                        }
+                    },
+                    {
+                        field: 'ModifyDate',
+                        title: '修改时间',
+                        templet: function (d) {
+                            if (!d.ModifyDate) return "";
+                            var ts = parseInt(d.ModifyDate.replace(/\/Date\((\d+)\)\//, "$1"));
+                            return util.toDateString(ts, 'yyyy-MM-dd HH:mm:ss');
+                        }
+                    },
+                    { title: '操作', toolbar: '#barDemo', width: 150 }
+                ]]
+                , page: true
+            });
 
-        // 监听行工具事件
-        table.on('tool(jobtable)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'del') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
-                });
-            } else if (obj.event === 'edit') {
-                // ⭐ 克隆表单模板（避免关闭后掉到页面下方）
-                var formHtml = document.getElementById("editFormTpl").innerHTML;
 
-                var index = layer.open({
-                    type: 1,
-                    area: ['500px', '300px'],
-                    title: '编辑职位信息',
-                    shade: 0.6,
-                    shadeClose: false,
-                    content: formHtml   // ⭐ 用模板内容，而不是页面上的 form
-                });
+            //监听行工具事件
+            table.on('tool(jobtable)', function (obj) {
+                var data = obj.data; // 当前行数据
 
-                // ⭐ 弹窗渲染后赋值
-                setTimeout(function () {
-                    form.val("editForm", {
-                        "ID": data.ID,            // ⭐ 带上 ID
-                        "JobName": data.JobName,
-                        "JobCode": data.JobCode
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        $.ajax({
+                            url: "/JobManage/Delete",
+                            type: "post",
+                            data: { ID: data.ID },
+                            success: function (res) {
+                                if (res.code == 0) {
+                                    layer.msg(res.msg, { icon: 6, time: 1200 });
+                                    //关闭弹层
+                                    layer.closeAll(); // 关闭所有类型的层
+                                    //重载
+                                    Search();
+
+                                } else {
+                                    layer.msg(res.msg, { icon: 5, time: 2000 });
+                                }
+                            }
+                        });
+                        layer.close(index);
                     });
-                }, 50);
-            }
-        });
+                }else if (obj.event === 'edit') {
+                    // 编辑
+                    layer.open({
+                        type: 1, // 页面层
+                        area: ['500px', '300px'],
+                        title: '修改职位',
+                        shade: 0.6,
+                        shadeClose: false,
+                        maxmin: true,
+                        anim: 0,
+                        content: $(".addHide"),
+                        cancel: function () {
+                            $(".addHide").hide(); // 关闭时隐藏表单
+                        }
+                    });
 
-        //修改
-        // ⭐ 保存按钮 Ajax 提交
-        form.on('submit(saveBtn)', function (formData) {
-            $.ajax({
-                url: '/JobManage/Save',   // ⭐ 你后端的保存接口
-                type: 'POST',
-                data: formData.field,     // ⭐ Layui 自动收集的表单数据
-                success: function (res) {
-                    if (res.code === 0) {
-                        layer.msg('保存成功', { icon: 1 });
-                        layer.closeAll(); // 关闭弹层
-                        table.reload('jobtable'); // 刷新表格
-                    } else {
-                        layer.msg(res.msg || '保存失败', { icon: 2 });
-                    }
-                },
-                error: function () {
-                    layer.msg('请求出错，请稍后再试', { icon: 2 });
+                    // 表单赋值
+                    form.val('demo-val-filter', {
+                        "JobName": data.JobName,
+                        "JobCode": data.JobCode,
+                        "ID": data.ID
+                    });
                 }
             });
-            return false; // 阻止表单跳转
-        });
 
 
-        // 查询按钮点击事件
-        $(document).on('click', '.layui-btn-radius', function () {
-            var name = $("input[name='name']").val();
-            var code = $("input[name='code']").val();
+            // 提交事件（添加功能）
+            form.on('submit(demo2)', function (data) {
+                var field = data.field; // 获取表单字段值
+                // 此处可执行 Ajax 等操作
 
-            // 重新加载表格并传参数
-            layui.table.reload('jobtable', {
-                where: { // 传递到后端的参数
-                    name: name,
-                    code: code
-                },
-                page: { curr: 1 } // 从第一页开始
+                $.ajax({
+                    url: "/JobManage/Save",
+                    type: "post",
+                    data: field,
+                    success: function (res) {
+                        if (res.code == 0) {
+                            layer.msg(res.msg, { icon: 6, time: 1000 }, function () {
+                                //关闭弹层
+                                layer.closeAll(); // 关闭所有类型的层
+                                //重载
+                                Search();
+
+                                $(".addHide").hide();
+                            });
+                        } else {
+                            layer.msg(res.msg, { icon: 5, time: 2000 });
+                        }
+                    }
+                });
+
+                // …
+                return false; // 阻止默认 form 跳转
             });
         });
 
-    });
+        //查询
+        function Search() {
+            table.reload('jobtable', {
+                where: { // 传递数据异步请求时携带的字段
+                    name: $("#name").val(),
+                    code: $("#code").val()
+                },
+                page: { curr: 1 } // ⭐ 查询后回到第一页
+            });
+        }
+
+        //添加页面设置
+        function Add() {
+            //赋值
+            form.val('demo-val-filter', {
+                "JobName": "",
+                "JobCode": "",
+                "ID": ""
+
+            });
+
+            // 在此处输入 layer 的任意代码
+            layer.open({
+                type: 1, // page 层类型
+                area: ['500px', '300px'],
+                title: '新增职位',
+                shade: 0.6, // 遮罩透明度
+                shadeClose: false, // 点击遮罩区域，关闭弹层
+                maxmin: true, // 允许全屏最小化
+                anim: 0, // 0-6 的动画形式，-1 不开启
+                content: $(".addHide") ,
+                cancel: function (index, layero, that) {
+                    $(".addHide").hide();
+                }
+            });
+        }
+
 </script>
+
+
+
+
+
+
+
+

@@ -1,0 +1,291 @@
+﻿
+
+
+
+
+@{
+    ViewBag.Title = "UploadInfo";
+}
+
+<div>
+    <fieldset class="layui-elem-field">
+        <legend>导入说明</legend>
+        <div class="layui-field-box">
+            <span>
+                填写须知:<br />
+                1,不能在本excel信息类别进行增加、删除、修改,否则无法正确匹配数据<br />
+                2、红色字段为必填字段，黑色字段为选填字段;<br />
+            </span><br />
+            <span>
+                <b>
+                    下载模板：
+                    <a href="~/Content/templet/xx公司新员工导入模板.xlsx" style="color:blue;">xx公司新员工导入模板.xlsx</a>
+                </b>
+            </span>
+        </div>
+    </fieldset>
+</div>
+
+<div>
+    <fieldset class="layui-elem-field">
+        <legend>上传操作</legend>
+        <div class="layui-field-box">
+            <div class="layui-btn-container">
+                <button type="button" class="layui-btn layui-btn-normal" id="chooseFile">选择文件</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="uploadFile" disabled>上传数据</button>
+                <input type="file" id="fileInput" accept=".xlsx" style="display: none;" />
+                <span id="statusText" style="margin-left:10px;"></span>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div style="margin-top:20px;">
+    <table class="layui-table" lay-size="sm">
+        <thead>
+            <tr>
+                <th>员工账号</th>
+                <th>员工姓名</th>
+                <th>性别</th>
+                <th>出生日期</th>
+                <th>邮箱</th>
+                <th>电话</th>
+                <th>员工住址</th>
+                <th>上传状态</th> <!-- 新增状态列 -->
+            </tr>
+        </thead>
+        <tbody id="dataContainer">
+            <tr>
+                <td colspan="8" style="text-align:center; color:#999;">请选择Excel文件查看数据</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 引入必要的库 -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/layui/2.8.11/layui.js"></script>
+
+<script>
+    layui.use('layer', function () {
+        var layer = layui.layer;
+        var $ = layui.jquery;
+
+        // 全局变量存储解析后的数据（包含状态）
+        var parsedData = [];
+        var selectedFile = null;
+
+        // 绑定文件选择事件
+        $('#chooseFile').click(function () {
+            $('#fileInput').click();
+        });
+
+        // 绑定上传按钮事件
+        $('#uploadFile').click(function () {
+            if (!selectedFile || parsedData.length === 0) {
+                layer.msg('请先选择文件并确认有可上传的数据', { icon: 3 });
+                return;
+            }
+
+
+            console.log('即将上传的数据:', parsedData);
+
+
+
+            // 显示加载层
+            var loadingIndex = layer.load(2);
+
+            // 重置所有状态为"上传中"
+            parsedData.forEach(item => {
+                item.uploadStatus = '上传中';
+                item.uploadClass = 'layui-bg-orange';
+            });
+            updateTableDisplay();
+
+            // 创建FormData对象，包含解析后的所有数据
+            var formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('employeeData', JSON.stringify(parsedData));
+
+            // 发送AJAX请求上传数据
+            $.ajax({
+                url: '/UserManage/UploadEmployeeData', // 后端处理上传的接口
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    layer.close(loadingIndex);
+
+                    if (res.success) {
+                        console.log("后端返回的数据：", res);
+
+                        var results = [];
+                        if (Array.isArray(res.data)) {
+                            results = res.data;
+                        } else if (res.data) {
+                            results = [res.data];
+                        }
+
+                        if (results.length > 0) {
+                            results.forEach(result => {
+                                var employeeId = result.employeeId || result.EmployeeId;
+                                var success = result.success !== undefined ? result.success : result.Success;
+                                var message = result.message || result.Message;
+
+                                var item = parsedData.find(d => d.employeeId === employeeId);
+                                if (item) {
+                                    if (success) {
+                                        item.uploadStatus = '上传成功';
+                                        item.uploadClass = 'layui-bg-green';
+                                    } else {
+                                        item.uploadStatus = '上传失败: ' + (message || '未知错误');
+                                        item.uploadClass = 'layui-bg-red';
+                                    }
+                                }
+                            });
+                        } else {
+                            parsedData.forEach(item => {
+                                item.uploadStatus = '上传成功';
+                                item.uploadClass = 'layui-bg-green';
+                            });
+                        }
+
+                        updateTableDisplay();
+                        layer.msg('批量上传完成', { icon: 1 });
+                        parent.Search();
+                    } else {
+                        parsedData.forEach(item => {
+                            item.uploadStatus = '上传失败: ' + (res.message || '服务器错误');
+                            item.uploadClass = 'layui-bg-red';
+                        });
+                        updateTableDisplay();
+                        layer.msg(res.message || '上传失败', { icon: 2 });
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    layer.close(loadingIndex);
+
+                    // 网络错误，更新所有状态
+                    parsedData.forEach(item => {
+                        item.uploadStatus = '上传失败: 网络错误';
+                        item.uploadClass = 'layui-bg-red';
+                    });
+                    updateTableDisplay();
+
+                    layer.msg('上传请求失败: ' + error, { icon: 2 });
+                    console.error('上传错误:', error);
+                }
+            });
+        });
+
+        // 处理文件选择
+        $('#fileInput').change(function (e) {
+            selectedFile = e.target.files[0];
+            if (!selectedFile) return;
+
+            // 显示状态
+            $('#statusText').text('正在读取文件...');
+            $('#dataContainer').html('<tr><td colspan="8" style="text-align:center;">正在解析数据...</td></tr>');
+            $('#uploadFile').attr('disabled', true).removeClass('layui-btn-normal').addClass('layui-btn-primary');
+
+            // 读取文件
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    // 解析Excel
+                    var data = new Uint8Array(e.target.result);
+                    var workbook = XLSX.read(data, { type: 'array' });
+
+                    // 获取第一个工作表
+                    var sheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[sheetName];
+
+                    // 转换为JSON时指定从第3行开始读取数据
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                        header: 1,
+                        range: 2
+                    });
+
+                    // 处理数据并显示（包含初始状态）
+                    parsedData = processData(jsonData);
+                    updateTableDisplay();
+
+                    // 启用上传按钮
+                    if (parsedData.length > 0) {
+                        $('#uploadFile').attr('disabled', false).removeClass('layui-btn-primary').addClass('layui-btn-normal');
+                    }
+
+                    $('#statusText').text('已加载: ' + selectedFile.name + ' (共 ' + parsedData.length + ' 条记录)');
+                } catch (error) {
+                    $('#statusText').text('解析失败: ' + error.message);
+                    $('#dataContainer').html('<tr><td colspan="8" style="text-align:center; color:red;">解析文件时出错: ' + error.message + '</td></tr>');
+                    console.error('解析错误:', error);
+                }
+            };
+
+            reader.readAsArrayBuffer(selectedFile);
+        });
+
+        // 处理数据格式，添加状态字段
+        function processData(data) {
+            var result = [];
+
+            if (!data || data.length === 0) {
+                return result;
+            }
+
+            // 遍历所有数据行，添加状态字段
+            data.forEach(function (row) {
+                if (!row || row.length === 0) return;
+
+                var birthDate = row[4];
+                if (typeof birthDate === 'number') {
+                    birthDate = new Date((birthDate - 25569) * 86400000).toISOString().split('T')[0];
+                }
+
+                // 每个数据项添加上传状态相关字段
+                result.push({
+                    employeeId: row[1] || '',
+                    name: row[2] || '',
+                    gender: row[3] || '',
+                    birthDate: birthDate || '',
+                    email: row[5] || '',
+                    phone: row[6] || '',
+                    address: row[7] || '',
+                    uploadStatus: '未上传',  // 初始状态
+                    uploadClass: 'layui-bg-gray'  // 初始状态样式
+                });
+            });
+
+            return result;
+        }
+
+        // 更新表格显示，包含状态列
+        function updateTableDisplay() {
+            if (!parsedData || parsedData.length === 0) {
+                $('#dataContainer').html('<tr><td colspan="8" style="text-align:center; color:#999;">未找到有效数据</td></tr>');
+                return;
+            }
+
+            var html = '';
+            parsedData.forEach(function (item) {
+                html += '<tr>';
+                html += '<td>' + item.employeeId + '</td>';
+                html += '<td>' + item.name + '</td>';
+                html += '<td>' + item.gender + '</td>';
+                html += '<td>' + item.birthDate + '</td>';
+                html += '<td>' + item.email + '</td>';
+                html += '<td>' + item.phone + '</td>';
+                html += '<td>' + item.address + '</td>';
+                // 状态列使用Layui徽章组件显示不同状态
+                html += '<td><span class="layui-badge ' + item.uploadClass + '">' + item.uploadStatus + '</span></td>';
+                html += '</tr>';
+            });
+
+            $('#dataContainer').html(html);
+        }
+    });
+</script>

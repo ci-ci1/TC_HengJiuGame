@@ -1,11 +1,10 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
 @using TC_HengJiuGame.Models;
 @{
-    T_Users t_Users = new T_Users();
+    Users t_Users = new Users();
     if (ViewBag.UserModel != null)
     {
         t_Users = ViewBag.UserModel;
@@ -13,12 +12,16 @@
 }
 
 
+
+
+
+
 <style>
     .layui-body {
         position: absolute;
-        top: 60px; /* 头部高度 */
-        bottom: 40px; /* 底部高度 */
-        left: 200px; /* 侧边栏宽度 */
+        top: 60px; /* header 高度 */
+        bottom: 40px;
+        left: 200px;
         right: 0;
     }
 
@@ -27,13 +30,38 @@
             height: 100%;
             border: none;
         }
+
+    /* 动画背景 canvas 全屏覆盖 */
+    #bgCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+    /* 顶部时间显示 */
+    #timeDisplay {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 20px;
+        color: #fff;
+        font-size: 14px;
+    }
 </style>
 
+<!-- 动画背景 -->
+<canvas id="bgCanvas"></canvas>
 
 <div class="layui-layout layui-layout-admin">
+    <!-- 顶部 header -->
     <div class="layui-header">
-        <div class="layui-logo layui-hide-xs layui-bg-black">恒久游戏管理系统</div>
-        <!-- 头部区域（可配合layui 已有的水平导航） -->
+        <div class="layui-logo layui-hide-xs layui-bg-black">
+            恒久游戏管理系统
+        </div>
+
+        <!-- 中间的时间显示 -->
+        <div id="timeDisplay"></div>
 
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
@@ -49,16 +77,17 @@
             </li>
         </ul>
     </div>
+
+    <!-- 左侧菜单 -->
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">基本信息管理</a>
+                    <a href="javascript:;">基本信息管理</a>
                     <dl class="layui-nav-child">
                         <dd><a onclick="toUrl('JobManage')">职位管理</a></dd>
-                        <dd><a href="javascript:;">组织机构管理</a></dd>
-                        <dd><a href="javascript:;">用户管理</a></dd>
+                        <dd><a onclick="toUrl('OrgManage')">组织机构管理</a></dd>
+                        <dd><a href="javascript:;" onclick="toUrl('UserManage')">用户管理</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -73,78 +102,65 @@
                     <a href="javascript:;">游戏管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;">游戏大类管理</a></dd>
-                        <dd><a href="javascript:;">游戏角色管理</a></dd>
+                        <dd><a href="javascript:;" onclick="toUrl('GameRoleManage')">游戏角色管理</a></dd>
                         <dd><a href="javascript:;">游戏皮肤管理</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item"><a href="javascript:;">...</a></li>
-                <li class="layui-nav-item"><a href="javascript:;">...</a></li>
             </ul>
         </div>
     </div>
-</div>
-<div class="layui-body">
-    <iframe id="Demo" src="/JobManage/Index" @*style="width:99%;height:99%;"*@></iframe>
-</div>
-<div class="layui-footer">
-    底部固定区域
-    底部固定区域
-</div>
 
+    <!-- 主体内容 -->
+    <div class="layui-body">
+        <iframe id="Demo"></iframe>
+    </div>
 
+    <!-- 底部 -->
+    <div class="layui-footer">
+        底部固定区域
+    </div>
+</div>
 
 <script>
+    /* 页面跳转 */
     function toUrl(job) {
-        $("#Demo").attr("src", "/" + job+"/Index")
+        $("#Demo").attr("src", "/" + job + "/Index")
     }
 
-    //JS
     layui.use(['element', 'layer', 'util'], function () {
         var element = layui.element;
         var layer = layui.layer;
         var util = layui.util;
-        var $ = layui.$;
-
-        //头部事件
         util.event('lay-header-event', {
-            menuLeft: function (othis) { // 左侧菜单事件
+            menuLeft: function () {
                 layer.msg('展开左侧菜单的操作', { icon: 0 });
-            },
+            }
         });
     });
 
-
-
-    //显示修改页面
     function editUser() {
-        // 在此处输入 layer 的任意代码
         layer.open({
             title: '修改个人资料',
-            type: 2, // page 层类型
+            type: 2,
             area: ['680px', '450px'],
-            shade: 0.8, // 遮罩透明度
-            shadeClose: false, // 点击遮罩区域，关闭弹层
-            maxmin: true, // 允许全屏最小化
-            anim: 0, // 0-6 的动画形式，-1 不开启
+            shade: 0.8,
+            maxmin: true,
+            anim: 0,
             content: '/Home/Edit'
         });
     }
-    //显示修改密码页面
     function editPassWord() {
-        // 在此处输入 layer 的任意代码
         layer.open({
             title: '修改密码',
-            type: 2, // page 层类型
+            type: 2,
             area: ['360px', '380px'],
-            shade: 0.8, // 遮罩透明度
-            shadeClose: false, // 点击遮罩区域，关闭弹层
-            maxmin: true, // 允许全屏最小化
-            anim: 0, // 0-6 的动画形式，-1 不开启
+            shade: 0.8,
+            maxmin: true,
+            anim: 0,
             content: '/Home/EditPassWord'
         });
     }
-
-    //点击退出事件,清除缓存
     function logOut() {
         $.ajax({
             url: "/Home/Logout",
@@ -160,5 +176,110 @@
             }
         });
     }
-</script>
 
+    /* 实时显示时间 */
+    function updateTime() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const ss = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById("timeDisplay").textContent =
+            `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    /* ========= 粒子连线 + 鼠标交互背景 ========= */
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+
+    class Particle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            this.vx = (Math.random() - 0.5) * 1.2;
+            this.vy = (Math.random() - 0.5) * 1.2;
+            this.radius = 2 + Math.random() * 2;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 0 || this.x > w) this.vx *= -1;
+            if (this.y < 0 || this.y > h) this.vy *= -1;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = "#66ccff";
+            ctx.fill();
+        }
+    }
+
+    let particles = [];
+    for (let i = 0; i < 120; i++) {
+        particles.push(new Particle());
+    }
+
+    const mouse = { x: null, y: null, radius: 150 };
+    window.addEventListener("mousemove", e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+    window.addEventListener("mouseout", () => {
+        mouse.x = null;
+        mouse.y = null;
+    });
+
+    function connect() {
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                let dx = particles[i].x - particles[j].x;
+                let dy = particles[i].y - particles[j].y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(102, 204, 255, ${1 - dist / 120})`;
+                    ctx.lineWidth = 1;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+            if (mouse.x && mouse.y) {
+                let dx = p.x - mouse.x;
+                let dy = p.y - mouse.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < mouse.radius) {
+                    p.x -= dx * 0.02;
+                    p.y -= dy * 0.02;
+                }
+            }
+        });
+        connect();
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    window.addEventListener("resize", () => {
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w;
+        canvas.height = h;
+    });
+</script>

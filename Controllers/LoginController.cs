@@ -18,7 +18,7 @@ namespace TC_HengJiuGame.Controllers
         /// <summary>
         /// 数据库连接
         /// </summary>
-        TC_HengJiuGame_DBEntities db = new TC_HengJiuGame_DBEntities();
+        HengJiuGameEntities db = new HengJiuGameEntities();
         /// <summary>
         /// 返回参数
         /// </summary>
@@ -46,14 +46,14 @@ namespace TC_HengJiuGame.Controllers
         #region 方法
 
         #region 登陆验证
-        public ActionResult VeryifyLogin(T_Users model)
+        public ActionResult VeryifyLogin(Users model)
         {
             try
             {
-                var entity = db.T_Users.Where(a => a.UserCode == model.UserCode && a.PassWord == model.PassWord).FirstOrDefault();
+                var entity = db.Users.Where(a => a.UserCode == model.UserCode && a.Password == model.Password).FirstOrDefault();
                 if (entity != null)
                 {
-                    Session["T_Users"] = entity;
+                    Session["Users"] = entity;
 
                     returnJsonData.code = 0;
                     returnJsonData.msg = "登陆成功！";
@@ -75,7 +75,7 @@ namespace TC_HengJiuGame.Controllers
         #endregion
 
         #region 注册
-        public ActionResult VeryifyAdd(T_Users model)
+        public ActionResult VeryifyAdd(Users model)
         {
 
             try
@@ -84,7 +84,7 @@ namespace TC_HengJiuGame.Controllers
                 model.ModifyDate = DateTime.Now;
                 model.CreateDate = DateTime.Now;
                 model.Status = false;
-                db.T_Users.Add(model);
+                db.Users.Add(model);
                 if (db.SaveChanges() > 0)
                 {
                     returnJsonData.code = 0;
@@ -109,6 +109,7 @@ namespace TC_HengJiuGame.Controllers
         #endregion
 
 
+      
 
 
 

@@ -4,9 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="b514acef3b234fd097e13941a224b5c2" Name="Diagram1">
-        <EntityTypeShape EntityType="TC_HengJiuGame_DBModel.T_Users" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="TC_HengJiuGame_DBModel.Job" Width="1.5" PointX="3.375" PointY="0.75" />
+      <Diagram DiagramId="418f8e554fcc470289f115b86ee4356d" Name="Diagram1">
+        <EntityTypeShape EntityType="HengJiuGameModel.Job" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HengJiuGameModel.Users" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HengJiuGameModel.GameRole" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="HengJiuGameModel.OrganizationStructure" Width="1.5" PointX="7.5" PointY="0.875" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

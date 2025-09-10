@@ -13,10 +13,10 @@ namespace TC_HengJiuGame.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class TC_HengJiuGame_DBEntities : DbContext
+    public partial class HengJiuGameEntities : DbContext
     {
-        public TC_HengJiuGame_DBEntities()
-            : base("name=TC_HengJiuGame_DBEntities")
+        public HengJiuGameEntities()
+            : base("name=HengJiuGameEntities")
         {
         }
     
@@ -25,7 +25,9 @@ namespace TC_HengJiuGame.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<T_Users> T_Users { get; set; }
         public virtual DbSet<Job> Job { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<GameRole> GameRole { get; set; }
+        public virtual DbSet<OrganizationStructure> OrganizationStructure { get; set; }
     }
 }

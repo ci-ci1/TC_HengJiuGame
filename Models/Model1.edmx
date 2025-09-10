@@ -4,7 +4,20 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="TC_HengJiuGame_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="HengJiuGameModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="GameRole">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GameID" Type="int" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="50" />
+          <Property Name="Lines" Type="varchar" MaxLength="2000" />
+          <Property Name="RoleType" Type="nvarchar" MaxLength="20" />
+          <Property Name="Sex" Type="char" MaxLength="2" />
+          <Property Name="ShelfTime" Type="datetime" />
+          <Property Name="Remark" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="Job">
           <Key>
             <PropertyRef Name="ID" />
@@ -16,7 +29,20 @@
           <Property Name="ModifyDate" Type="datetime" />
           <Property Name="IsDel" Type="bit" />
         </EntityType>
-        <EntityType Name="T_Users">
+        <EntityType Name="OrganizationStructure">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="OrgName" Type="varchar" MaxLength="200" />
+          <Property Name="OrgCode" Type="varchar" MaxLength="200" />
+          <Property Name="Leve" Type="int" />
+          <Property Name="ParentID" Type="uniqueidentifier" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ModifyDate" Type="datetime" />
+          <Property Name="IsParent" Type="bit" />
+        </EntityType>
+        <EntityType Name="Users">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
@@ -27,22 +53,38 @@
           <Property Name="BirthDay" Type="date" />
           <Property Name="NativePlace" Type="varchar" MaxLength="200" />
           <Property Name="Address" Type="varchar" MaxLength="2000" />
-          <Property Name="PassWord" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="200" />
           <Property Name="Email" Type="varchar" MaxLength="50" />
           <Property Name="Tel" Type="varchar" MaxLength="50" />
           <Property Name="Status" Type="bit" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="ModifyDate" Type="datetime" />
+          <Property Name="JobId" Type="uniqueidentifier" />
+          <Property Name="OrgID" Type="uniqueidentifier" />
+          <Property Name="QQ" Type="varchar" MaxLength="50" />
         </EntityType>
-        <EntityContainer Name="TC_HengJiuGame_DBModelStoreContainer">
+        <EntityContainer Name="HengJiuGameModelStoreContainer">
+          <EntitySet Name="GameRole" EntityType="Self.GameRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Job" EntityType="Self.Job" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="T_Users" EntityType="Self.T_Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrganizationStructure" EntityType="Self.OrganizationStructure" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="TC_HengJiuGame_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="T_Users">
+      <Schema Namespace="HengJiuGameModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Job">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="JobName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="JobCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+          <Property Name="IsDel" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Users">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
@@ -53,37 +95,69 @@
           <Property Name="BirthDay" Type="DateTime" Precision="0" />
           <Property Name="NativePlace" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Address" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="PassWord" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Tel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="Boolean" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+          <Property Name="JobId" Type="Guid" />
+          <Property Name="OrgID" Type="Guid" />
+          <Property Name="QQ" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityContainer Name="TC_HengJiuGame_DBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="T_Users" EntityType="Self.T_Users" />
-          <EntitySet Name="Job" EntityType="TC_HengJiuGame_DBModel.Job" />
+        <EntityContainer Name="HengJiuGameEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Job" EntityType="Self.Job" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="GameRole" EntityType="HengJiuGameModel.GameRole" />
+          <EntitySet Name="OrganizationStructure" EntityType="HengJiuGameModel.OrganizationStructure" />
         </EntityContainer>
-        <EntityType Name="Job">
+        <EntityType Name="GameRole">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GameID" Type="Int32" Nullable="false" />
+          <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Lines" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="RoleType" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Sex" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="ShelfTime" Type="DateTime" Precision="3" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="OrganizationStructure">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Guid" Nullable="false" />
-          <Property Name="JobName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrgName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="OrgCode" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Leve" Type="Int32" />
+          <Property Name="ParentID" Type="Guid" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="ModifyDate" Type="DateTime" Precision="3" />
-          <Property Name="IsDel" Type="Boolean" />
-          <Property Name="JobCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsParent" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="TC_HengJiuGame_DBModelStoreContainer" CdmEntityContainer="TC_HengJiuGame_DBEntities">
-          <EntitySetMapping Name="T_Users">
-            <EntityTypeMapping TypeName="TC_HengJiuGame_DBModel.T_Users">
-              <MappingFragment StoreEntitySet="T_Users">
+        <EntityContainerMapping StorageEntityContainer="HengJiuGameModelStoreContainer" CdmEntityContainer="HengJiuGameEntities">
+          <EntitySetMapping Name="Job">
+            <EntityTypeMapping TypeName="HengJiuGameModel.Job">
+              <MappingFragment StoreEntitySet="Job">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="JobCode" ColumnName="JobCode" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="IsDel" ColumnName="IsDel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="HengJiuGameModel.Users">
+              <MappingFragment StoreEntitySet="Users">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="UserCode" ColumnName="UserCode" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
@@ -91,23 +165,42 @@
                 <ScalarProperty Name="BirthDay" ColumnName="BirthDay" />
                 <ScalarProperty Name="NativePlace" ColumnName="NativePlace" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="PassWord" ColumnName="PassWord" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Tel" ColumnName="Tel" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+                <ScalarProperty Name="OrgID" ColumnName="OrgID" />
+                <ScalarProperty Name="QQ" ColumnName="QQ" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Job">
-            <EntityTypeMapping TypeName="TC_HengJiuGame_DBModel.Job">
-              <MappingFragment StoreEntitySet="Job">
-                <ScalarProperty Name="JobCode" ColumnName="JobCode" />
-                <ScalarProperty Name="IsDel" ColumnName="IsDel" />
+          <EntitySetMapping Name="GameRole">
+            <EntityTypeMapping TypeName="HengJiuGameModel.GameRole">
+              <MappingFragment StoreEntitySet="GameRole">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="ShelfTime" ColumnName="ShelfTime" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="RoleType" ColumnName="RoleType" />
+                <ScalarProperty Name="Lines" ColumnName="Lines" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="GameID" ColumnName="GameID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrganizationStructure">
+            <EntityTypeMapping TypeName="HengJiuGameModel.OrganizationStructure">
+              <MappingFragment StoreEntitySet="OrganizationStructure">
+                <ScalarProperty Name="IsParent" ColumnName="IsParent" />
                 <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="Leve" ColumnName="Leve" />
+                <ScalarProperty Name="OrgCode" ColumnName="OrgCode" />
+                <ScalarProperty Name="OrgName" ColumnName="OrgName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

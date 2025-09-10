@@ -12,20 +12,15 @@ namespace TC_HengJiuGame.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class T_Users
+    public partial class OrganizationStructure
     {
         public System.Guid ID { get; set; }
-        public string UserCode { get; set; }
-        public string UserName { get; set; }
-        public Nullable<bool> Sex { get; set; }
-        public Nullable<System.DateTime> BirthDay { get; set; }
-        public string NativePlace { get; set; }
-        public string Address { get; set; }
-        public string PassWord { get; set; }
-        public string Email { get; set; }
-        public string Tel { get; set; }
-        public Nullable<bool> Status { get; set; }
+        public string OrgName { get; set; }
+        public string OrgCode { get; set; }
+        public Nullable<int> Leve { get; set; }
+        public Nullable<System.Guid> ParentID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> ModifyDate { get; set; }
+        public Nullable<bool> IsParent { get; set; }
     }
 }
