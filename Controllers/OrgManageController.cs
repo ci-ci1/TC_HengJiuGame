@@ -113,7 +113,11 @@ namespace TC_HengJiuGame.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        //添加子节点
+        /// <summary>
+        /// 添加子节点
+        /// </summary>
+        /// <param name="org"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Save(OrganizationStructure org)
         {
@@ -139,7 +143,11 @@ namespace TC_HengJiuGame.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        //修改
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public ActionResult Update(OrganizationStructure model)
         {
             var entity = db.OrganizationStructure.Find(model.ID);
@@ -169,7 +177,11 @@ namespace TC_HengJiuGame.Controllers
             }
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
+        /// <summary>
+        /// 编辑子节点对父节点赋值
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public ActionResult GetInfo(Guid? ID)
         {
             if (ID==Guid.Empty||ID==null)
@@ -194,7 +206,11 @@ namespace TC_HengJiuGame.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        //删除
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public ActionResult Delete(Guid ID)
         {
             var model = db.OrganizationStructure.Find(ID);

@@ -41,6 +41,10 @@ namespace TC_HengJiuGame.Controllers
                 treeDate.children = BindTree(list, item.ID);//递归调用
                 newTreelist.Add(treeDate);
             }
+            if (!string.IsNullOrEmpty(name))
+            {
+                list = list.Where(a => a.ModuleName.Contains(name)).ToList();
+            }
             treeListDate.code = 0;
             treeListDate.count = newTreelist.Count;
             treeListDate.data = newTreelist;

@@ -16,8 +16,6 @@ namespace TC_HengJiuGame.Controllers
 
         ReturnJsonData jsonData = new ReturnJsonData();
 
-        // GET: JobManage
-
         #region 职位管理
 
         //职位管理

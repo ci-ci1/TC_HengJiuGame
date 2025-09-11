@@ -26,7 +26,6 @@ namespace TC_HengJiuGame.Controllers
         #endregion
 
         #region 视图
-        // GET: 登陆视图
         public ActionResult Index()
         {
             return View();
@@ -46,6 +45,11 @@ namespace TC_HengJiuGame.Controllers
         #region 方法
 
         #region 登陆验证
+        /// <summary>
+        /// 登陆验证
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public ActionResult VeryifyLogin(Users model)
         {
             try
@@ -75,6 +79,11 @@ namespace TC_HengJiuGame.Controllers
         #endregion
 
         #region 注册
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public ActionResult VeryifyAdd(Users model)
         {
 

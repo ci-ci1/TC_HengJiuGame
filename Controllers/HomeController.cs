@@ -13,11 +13,16 @@ namespace TC_HengJiuGame.Controllers
     {
         HengJiuGameEntities db = new HengJiuGameEntities();
 
-        //返回实例
+        /// <summary>
+        /// 返回实例
+        /// </summary>
         ReturnJsonData returnJsonData = new ReturnJsonData();
 
         #region 视图
-        //首页视图
+        /// <summary>
+        /// 首页视图
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             if (Session["Users"] == null)
@@ -30,29 +35,31 @@ namespace TC_HengJiuGame.Controllers
             return View();
         }
 
-        //修改信息视图
+        /// <summary>
+        /// 修改信息视图
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Edit()
         {
             //返回页面赋值
             ViewBag.UserModel = LoginFitterController._adminUsers;
             return View();
         }
-
-
-
-
-        //修改密码视图
+        /// <summary>
+        /// 修改密码视图
+        /// </summary>
+        /// <returns></returns>
         public ActionResult EditPassWord()
         {
             ViewBag.UserModel = LoginFitterController._adminUsers;
             return View();
         }
         #endregion
-
-
-
-
-        //修改功能实现
+        /// <summary>
+        /// 修改功能实现
+        /// </summary>
+        /// <param name="t_Users"></param>
+        /// <returns></returns>
         public ActionResult Revise(Users t_Users)
         {
             if (t_Users.ID==Guid.Empty)
@@ -101,7 +108,10 @@ namespace TC_HengJiuGame.Controllers
         
         }
 
-        //退出登录
+        /// <summary>
+        /// 退出登录
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Logout()
         {
             var sessionInfo = System.Web.HttpContext.Current.Session["Users"];
@@ -123,7 +133,13 @@ namespace TC_HengJiuGame.Controllers
         }
 
 
-        //修改密码功能
+        /// <summary>
+        /// 修改密码功能
+        /// </summary>
+        /// <param name="t_Users"></param>
+        /// <param name="oldPassWord"></param>
+        /// <param name="newPassWord"></param>
+        /// <returns></returns>
         public ActionResult ChangePassWord(Users t_Users,string oldPassWord,string newPassWord)
         {
             var user = db.Users.Find(t_Users.ID);

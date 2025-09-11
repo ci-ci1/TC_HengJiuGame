@@ -33,7 +33,7 @@ namespace TC_HengJiuGame.Controllers
             return View();
         }
         /// <summary>
-        /// 
+        /// 查询
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
@@ -44,12 +44,10 @@ namespace TC_HengJiuGame.Controllers
         public ActionResult GetUserList(int page, int limit, string name, string startTime, string endTime)
         {
             var list = db.Users.ToList();
-
             if (!string.IsNullOrEmpty(name))
             {
                 list = list.Where(a => a.UserCode.Contains(name)).ToList();
             }
-
             // 时间区间查询
             if (!string.IsNullOrEmpty(startTime) && !string.IsNullOrEmpty(endTime))
             {
@@ -69,7 +67,7 @@ namespace TC_HengJiuGame.Controllers
         }
 
         /// <summary>
-        ///// 
+        /// 单个删除
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
@@ -110,7 +108,7 @@ namespace TC_HengJiuGame.Controllers
         }
 
         /// <summary>
-        /// 
+        /// 批量删除
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
@@ -147,26 +145,29 @@ namespace TC_HengJiuGame.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-
-        //添加修改
+        /// <summary>
+        /// 添加修改
+        /// </summary>
+        /// <param name="users"></param>
+        /// <returns></returns>
         public ActionResult Save(Users users)
         {
             try
             {
                 if (users.ID != Guid.Empty)
                 {
-                    var list = db.Users.Find(users.ID);
-                    if (list != null)
+                    var model = db.Users.Find(users.ID);
+                    if (model != null)
                     {
-                        list.UserCode = users.UserCode;
-                        list.UserName = users.UserName;
-                        list.Sex = users.Sex;
-                        list.NativePlace = users.NativePlace;
-                        list.Email = users.Email;
-                        list.Tel = users.Tel;
-                        list.Address = users.Address;
-                        list.BirthDay = users.BirthDay;
-                        db.Entry(list).State = System.Data.Entity.EntityState.Modified;
+                        model.UserCode = users.UserCode;
+                        model.UserName = users.UserName;
+                        model.Sex = users.Sex;
+                        model.NativePlace = users.NativePlace;
+                        model.Email = users.Email;
+                        model.Tel = users.Tel;
+                        model.Address = users.Address;
+                        model.BirthDay = users.BirthDay;
+                        db.Entry(model).State = System.Data.Entity.EntityState.Modified;
                     }
                     else
                     {
@@ -203,10 +204,6 @@ namespace TC_HengJiuGame.Controllers
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
-
-
-        //导出
         /// <summary>
         /// 导出用户数据到Excel文件
         /// 支持两种导出场景：按查询条件导出全部数据 或 导出用户勾选的特定数据
@@ -335,7 +332,11 @@ namespace TC_HengJiuGame.Controllers
             return new EmptyResult();
         }
 
-        //导入
+        /// <summary>
+        /// 导入
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public ActionResult UploadEmployeeData(HttpPostedFileBase file)
         {
             if (file != null && file.ContentLength > 0)
@@ -492,7 +493,11 @@ namespace TC_HengJiuGame.Controllers
             return Json(new { success = false, message = "未选择文件" });
         }
 
-        // 辅助方法：获取单元格值
+        /// <summary>
+        /// 辅助方法：获取单元格值
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
         private string GetCellValue(ICell cell)
         {
             if (cell == null)
@@ -520,7 +525,9 @@ namespace TC_HengJiuGame.Controllers
                     return string.Empty;
             }
         }
-
+        /// <summary>
+        /// 返回数据
+        /// </summary>
         public class UploadResult
         {
             [JsonProperty("employeeId")]

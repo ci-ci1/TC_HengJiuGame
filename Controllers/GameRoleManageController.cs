@@ -16,12 +16,18 @@ namespace TC_HengJiuGame.Controllers
         ReturnJsonListData listData = new ReturnJsonListData();
 
         ReturnJsonData jsonData = new ReturnJsonData();
-
-        // GET: GameRoleManage
         public ActionResult Index()
         {
             return View();
         }
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public ActionResult GetList(int page, int limit,string name,string type)
         {
             var list = db.GameRole.ToList();
@@ -46,8 +52,11 @@ namespace TC_HengJiuGame.Controllers
 
             return Json(listData, JsonRequestBehavior.AllowGet);
         }
-
-
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public ActionResult Delete(int ID)
         {
             try
@@ -82,25 +91,28 @@ namespace TC_HengJiuGame.Controllers
             }
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
-
+        /// <summary>
+        /// 添加，修改
+        /// </summary>
+        /// <param name="gameRole"></param>
+        /// <returns></returns>
         public ActionResult Save(GameRole gameRole)
         {
             try
             {
-                var list = db.GameRole.Find(gameRole.ID);
+                var model = db.GameRole.Find(gameRole.ID);
 
                 //判断是添加还是修改
-                if (list!=null  )
+                if (model != null  )
                 {
-                    list.GameID = gameRole.GameID;
-                    list.RoleName = gameRole.RoleName;
-                    list.Lines = gameRole.Lines;
-                    list.RoleType = gameRole.RoleType;
-                    list.Sex = gameRole.Sex;
-                    list.Remark = gameRole.Remark;
+                    model.GameID = gameRole.GameID;
+                    model.RoleName = gameRole.RoleName;
+                    model.Lines = gameRole.Lines;
+                    model.RoleType = gameRole.RoleType;
+                    model.Sex = gameRole.Sex;
+                    model.Remark = gameRole.Remark;
 
-                    db.Entry(list).State = System.Data.Entity.EntityState.Modified;
+                    db.Entry(model).State = System.Data.Entity.EntityState.Modified;
                 }
                 else
                 {
