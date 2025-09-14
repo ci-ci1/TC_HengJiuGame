@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Set";
+}
+
+<div>
+    <fieldset class="layui-elem-field">
+        <div class="layui-field-box">
+            <div class="layui-form-item" style=" margin-top: 10px">
+                <div class="layui-inline">
+                    <label class="layui-form-label">菜单名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="name" name="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" onclick="Search()" class="layui-btn"><i class="layui-icon layui-icon-search"></i> 查询</button>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-primary" onclick="checkAll(true)">
+                        <i class="layui-icon layui-icon-ok"></i> 全选
+                    </button>
+                    <button class="layui-btn layui-btn-primary" onclick="checkAll(false)">
+                        <i class="layui-icon layui-icon-close"></i> 取消全选
+                    </button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<table class="layui-hide" id="ID-treeTable-demo"></table>
+
+<div class="layui-form-item" style="text-align: center;">
+    <button class="layui-btn layui-btn-primary" onclick="cancelSetting()">取消</button>
+    <button class="layui-btn" onclick="savePermissions()">保存设置</button>
+</div>
+
+
+
+<script>
+
+    var treeTable, form, layer;
+    layui.use(['treeTable', 'form', 'layer'], function () {
+        treeTable = layui.treeTable;  // 初始化树形表格
+        form = layui.form;            // 初始化表单
+        layer = layui.layer;
+
+
+
+        // 渲染表格（即使无数据，也会显示表头）
+        var inst = treeTable.render({
+            elem: '#ID-treeTable-demo',  // 绑定表格DOM
+            url: '/MenuManage/GetList',   // 接口可以返回空数据（但格式要正确）
+            cols: [[
+                    { type: 'checkbox', fixed: 'left' },
+                    { field: 'name', title: '权限名称' },
+                    { field: 'url', title: '权限链接' }
+                ]]
+            , page: true // 显示分页（即使无数据，分页栏也会显示）
+        });
+    });
+    // 查询
+    function Search() {
+        treeTable.reload('ID-treeTable-demo', {
+            where: { // 携带查询条件
+                name: $("#name").val()
+            },
+            page: { curr: 1 } // 查询后回到第一页
+        });
+    }
+
+    // 全选/取消全选
+    function checkAll(checked) {
+        // 遍历表格里的所有复选框
+        $('#ID-treeTable-demo').next('.layui-table-view')
+            .find('input[name="layTableCheckbox"]')
+            .each(function () {
+                this.checked = checked;
+            });
+
+        // 刷新复选框样式
+        layui.form.render('checkbox');
+    }
+    //保存
+    function savePermissions() {
+        //获取选中行
+        var checkStatus = treeTable.checkStatus('ID-treeTable-demo')
+        var data = checkStatus.data; // 获取选中的数据
+        // 如果没有勾选任何数据
+        if (data.length === 0) {
+            // 弹出提示框，提醒用户勾选数据
+            layer.msg('请勾选要保存的数据', {
+                icon: 5, // 错误提示
+                time: 2000 // 提示持续时间：2秒
+            });
+            return; // 不继续执行保存操作
+        }
+        // 提取选中ID
+        var ids = data.map(x => x.id).join(',');
+        console.log("选中的ID:", ids);
+        // 从父页面传递过来的 roleId（角色 ID）
+        var roleId = "@ViewBag.roleID";
+        $.ajax({
+            url: "/RoleMenuManage/SavePermission",
+            type: "post",
+            data: {
+                roleId: roleId,          // 角色 ID
+                ids: ids       // 选中权限 ID 列表
+            },
+            success: function (res) {
+                if (res.code == 0) {
+                    layer.msg(res.msg, { icon: 6, time: 2000 });
+                    //关闭弹层
+                    parent.layer.closeAll(); // 关闭所有类型的层
+                    //重载
+                    parent.Search();
+                } else {
+                    layer.msg(res.msg, { icon: 5, time: 2000 });
+                }
+            }
+        })
+
+    }
+
+
+</script>

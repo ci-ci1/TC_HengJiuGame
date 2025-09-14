@@ -42,6 +42,24 @@
           <Property Name="ModifyDate" Type="datetime" />
           <Property Name="IsParent" Type="bit" />
         </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="50" />
+          <Property Name="RoleCode" Type="varchar" MaxLength="50" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ModifyDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="RoleResourceModule">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoleID" Type="uniqueidentifier" />
+          <Property Name="ResourceModuleId" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="SystemResourceModule">
           <Key>
             <PropertyRef Name="ID" />
@@ -80,6 +98,8 @@
           <EntitySet Name="GameRole" EntityType="Self.GameRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Job" EntityType="Self.Job" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrganizationStructure" EntityType="Self.OrganizationStructure" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoleResourceModule" EntityType="Self.RoleResourceModule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SystemResourceModule" EntityType="Self.SystemResourceModule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
@@ -125,6 +145,8 @@
           <EntitySet Name="GameRole" EntityType="HengJiuGameModel.GameRole" />
           <EntitySet Name="OrganizationStructure" EntityType="HengJiuGameModel.OrganizationStructure" />
           <EntitySet Name="SystemResourceModule" EntityType="HengJiuGameModel.SystemResourceModule" />
+          <EntitySet Name="Role" EntityType="HengJiuGameModel.Role" />
+          <EntitySet Name="RoleResourceModule" EntityType="HengJiuGameModel.RoleResourceModule" />
         </EntityContainer>
         <EntityType Name="GameRole">
           <Key>
@@ -164,6 +186,24 @@
           <Property Name="ParentID" Type="Guid" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RoleCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="RoleResourceModule">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="RoleID" Type="Guid" />
+          <Property Name="ResourceModuleId" Type="Guid" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -243,6 +283,26 @@
                 <ScalarProperty Name="Url" ColumnName="Url" />
                 <ScalarProperty Name="ModuleName" ColumnName="ModuleName" />
                 <ScalarProperty Name="ModuleCode" ColumnName="ModuleCode" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role">
+            <EntityTypeMapping TypeName="HengJiuGameModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="RoleCode" ColumnName="RoleCode" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoleResourceModule">
+            <EntityTypeMapping TypeName="HengJiuGameModel.RoleResourceModule">
+              <MappingFragment StoreEntitySet="RoleResourceModule">
+                <ScalarProperty Name="ResourceModuleId" ColumnName="ResourceModuleId" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

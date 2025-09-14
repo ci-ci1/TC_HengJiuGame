@@ -1,0 +1,246 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .addHide {
+        display: none;
+    }
+    .layui-form-pane .layui-form-label {
+        margin-left:20px;
+    }
+    .layui-input, .layui-textarea {
+        width: 90%;
+    }
+    form{
+        margin-top:40px;
+        text-align:center;
+    }
+</style>
+
+<div class="addHide">
+
+    <form class="layui-form layui-form-pane" lay-filter="demo-val-filter">
+        <input type="hidden" name="ID" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="RoleName" autocomplete="off" placeholder="请输入角色名称" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色代码</label>
+            <div class="layui-input-block">
+                <input type="text" name="RoleCode" autocomplete="off" placeholder="请输入角色代码" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit lay-filter="demo2">确认</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+
+</div>
+
+<div>
+    <fieldset class="layui-elem-field">
+        <legend>
+            <span class="layui-breadcrumb">
+                <a href="/Home/Index" target="_top">基础信息管理</a>
+                <a><cite>权限管理</cite></a>
+            </span>
+        </legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item" style=" margin-top: 10px">
+                <div class="layui-inline">
+                    <label class="layui-form-label">角色名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="name" name="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">角色代码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="code" name="code" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" onclick="Add()" class="layui-btn layui-bg-blue"><i class="layui-icon layui-icon-add-1 "></i> 添加</button>
+                    <button type="button" onclick="Search()" class="layui-btn"><i class="layui-icon layui-icon-search"></i> 查询</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="set">设置权限</a>
+</script>
+
+<script>
+    var table;
+    var form;
+    layui.use(['table', 'util', 'form'], function () {
+        table = layui.table;
+        var util = layui.util;
+        form = layui.form;
+
+
+
+
+
+        table.render({
+            elem: '#test'
+            , id: 'test'
+            , url: '/RoleMenuManage/GetList'
+            , title: '权限表'
+            , cols: [[
+                { type: 'numbers', title: '序号', width: 60, align: 'center' },
+                { field: 'RoleName', title: '角色名称' },
+                { field: 'RoleCode', title: '角色代码' },
+                { field: 'ModuleName', title: '权限列表' },
+                { title: '操作', toolbar: '#barDemo', width: 260 }
+            ]]
+            , page: true
+        });
+
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data; // 当前行数据
+
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        url: "/RoleMenuManage/Delete",
+                        type: "post",
+                        data: { ID: data.ID },
+                        success: function (res) {
+                            if (res.code == 0) {
+                                layer.msg(res.msg, { icon: 6, time: 1200 });
+                                //关闭弹层
+                                layer.closeAll(); // 关闭所有类型的层
+                                //重载
+                                Search();
+
+                            } else {
+                                layer.msg(res.msg, { icon: 5, time: 2000 });
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+            // 编辑
+            else if (obj.event === 'edit') {
+                layer.open({
+                    type: 1, // 页面层
+                    area: ['500px', '300px'],
+                    title: '修改职位',
+                    shade: 0.6,
+                    shadeClose: false,
+                    maxmin: true,
+                    anim: 0,
+                    content: $(".addHide"),
+                    cancel: function () {
+                        $(".addHide").hide(); // 关闭时隐藏表单
+                    }
+                });
+
+                // 表单赋值
+                form.val('demo-val-filter', {
+                    "RoleName": data.RoleName,
+                    "RoleCode": data.RoleCode,
+                    "ID": data.ID
+                });
+            }
+                //设置权限
+            else if (obj.event === 'set') {
+                // 在此处输入 layer 的任意代码
+                layer.open({
+                    type: 2, // page 层类型
+                    area: ['800px', '650px'],
+                    title: '权限设置',
+                    shade: 0.6, // 遮罩透明度
+                    shadeClose: false, // 点击遮罩区域，关闭弹层
+                    maxmin: true, // 允许全屏最小化
+                    anim: 0, // 0-6 的动画形式，-1 不开启
+                    content: '/RoleMenuManage/Set?roleId=' + data.ID
+                });
+            }
+        });
+
+
+        // 提交事件（添加功能）
+        form.on('submit(demo2)', function (data) {
+            var field = data.field; // 获取表单字段值
+            // 此处可执行 Ajax 等操作
+
+            $.ajax({
+                url: "/RoleMenuManage/Save",
+                type: "post",
+                data: field,
+                success: function (res) {
+                    if (res.code == 0) {
+                        layer.msg(res.msg, { icon: 6, time: 1000 }, function () {
+                            //关闭弹层
+                            layer.closeAll(); // 关闭所有类型的层
+                            //重载
+                            Search();
+
+                            $(".addHide").hide();
+                        });
+                    } else {
+                        layer.msg(res.msg, { icon: 5, time: 2000 });
+                    }
+                }
+            });
+
+            // …
+            return false; // 阻止默认 form 跳转
+        });
+    });
+
+    //查询
+    function Search() {
+        table.reload('test', {
+            where: { // 传递数据异步请求时携带的字段
+                name: $("#name").val(),
+                code: $("#code").val()
+            },
+            page: { curr: 1 } // ⭐ 查询后回到第一页
+        });
+    }
+
+    //添加页面设置
+    function Add() {
+        //赋值
+        form.val('demo-val-filter', {
+            "JobName": "",
+            "JobCode": "",
+            "ID": ""
+
+        });
+
+        // 在此处输入 layer 的任意代码
+        layer.open({
+            type: 1, // page 层类型
+            area: ['500px', '300px'],
+            title: '新增职位',
+            shade: 0.6, // 遮罩透明度
+            shadeClose: false, // 点击遮罩区域，关闭弹层
+            maxmin: true, // 允许全屏最小化
+            anim: 0, // 0-6 的动画形式，-1 不开启
+            content: $(".addHide"),
+            cancel: function (index, layero, that) {
+                $(".addHide").hide();
+            }
+        });
+    }
+
+</script>

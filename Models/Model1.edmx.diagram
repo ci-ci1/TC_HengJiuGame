@@ -10,6 +10,8 @@
         <EntityTypeShape EntityType="HengJiuGameModel.GameRole" Width="1.5" PointX="4.625" PointY="0.75" />
         <EntityTypeShape EntityType="HengJiuGameModel.OrganizationStructure" Width="1.5" PointX="6.625" PointY="0.75" />
         <EntityTypeShape EntityType="HengJiuGameModel.SystemResourceModule" Width="1.5" PointX="8.625" PointY="0.75" />
+        <EntityTypeShape EntityType="HengJiuGameModel.Role" Width="1.5" PointX="10.5" PointY="0.875" />
+        <EntityTypeShape EntityType="HengJiuGameModel.RoleResourceModule" Width="1.5" PointX="12.375" PointY="0.875" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

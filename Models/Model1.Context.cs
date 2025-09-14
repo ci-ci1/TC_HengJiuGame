@@ -30,5 +30,7 @@ namespace TC_HengJiuGame.Models
         public virtual DbSet<GameRole> GameRole { get; set; }
         public virtual DbSet<OrganizationStructure> OrganizationStructure { get; set; }
         public virtual DbSet<SystemResourceModule> SystemResourceModule { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<RoleResourceModule> RoleResourceModule { get; set; }
     }
 }

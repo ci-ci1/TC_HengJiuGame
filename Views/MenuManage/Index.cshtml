@@ -104,10 +104,10 @@
                 <input type="hidden" name="Type" id="Type" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item" id="urlDis" name="urlDis">
+        <div class="layui-form-item">
             <label class="layui-form-label">链接</label>
             <div class="layui-input-block">
-                <input type="text" name="Url" id="Url" autocomplete="off" placeholder="请输入链接" readonly disabled class="layui-input">
+                <input type="text" name="Url" id="Url" autocomplete="off" placeholder="请输入链接" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -223,10 +223,6 @@
                 document.getElementById('Type').value = data.leve;
 
                 if (data.type == 0) {
-                    /// 隐藏“链接”字段
-                    document.getElementById('urlDis').style.display = "none";  // 隐藏字段
-                    // 清空链接字段值
-                    document.getElementById('urlDis').value = "";
                     //赋值
                     form.val('demo-val-filter-edit', {
                         "ParModuleCode": data.code,
@@ -239,10 +235,6 @@
                         "isEdit": true // 标记为编辑
                     });
                 } else {
-                    // 显示“链接”字段
-                    document.getElementById('urlDis').style.display = "block";  // 显示字段
-                    document.getElementById('urlDis').disabled = false;  // 启用字段
-
                     $.ajax({
                         url: "/MenuManage/GetInfo",  // 提交到保存接口
                         type: "post",
@@ -294,9 +286,7 @@
             }
             //新增子节点
             else if (obj.event === 'addchildren') {
-                // 显示“链接”字段
-                document.getElementById('urlDis').style.display = "block";  // 显示字段
-                document.getElementById('urlDis').disabled = false;  // 启用字段
+                
 
                 // 新增：计算子节点的数字级别
                 var childType = parseInt(data.type) + 1;

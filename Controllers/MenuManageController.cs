@@ -17,7 +17,7 @@ namespace TC_HengJiuGame.Controllers
             return View();
         }
         /// <summary>
-        /// 查询
+        /// 菜单列表查询
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
@@ -38,9 +38,10 @@ namespace TC_HengJiuGame.Controllers
                 treeDate.url = item.Url;
                 treeDate.parentId = item.ParentID;
                 treeDate.IsParent = db.SystemResourceModule.Where(a => a.ParentID == item.ID).ToList().Count > 0 ? true : false;
-                treeDate.children = BindTree(list, item.ID);//递归调用
+                treeDate.children = BindTree(db.SystemResourceModule.ToList(), item.ID);//递归调用
                 newTreelist.Add(treeDate);
             }
+            // 如果有查询条件
             if (!string.IsNullOrEmpty(name))
             {
                 list = list.Where(a => a.ModuleName.Contains(name)).ToList();
